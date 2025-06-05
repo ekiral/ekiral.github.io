@@ -1,3 +1,7 @@
 /blog/*.pdf
-./DS_Store
-gitignore
+/blog/*.synctex.gz
+/blog/*.log
+/blog/*.aux
+
+
+.DS_Store
