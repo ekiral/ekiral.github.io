@@ -2,12 +2,9 @@
 \input{./preamble}
 
 
-\newcommand{\calX}{\mathcal{X}}
-\newcommand{\calY}{\mathcal{Y}}
-\DeclareMathOperator{\Prob}{Prob}
-
 \title{Some Notation}
 \author{emk}
+\date{2025/06/05}
 \begin{document}
 
 \maketitle
@@ -43,15 +40,6 @@ or a partial retraction function $r_{\vec{\theta}}: U \to \Theta$ for a neighbor
 \item If furthermore the the tangent spaces $T_{\vec{\theta}}$ have distinguished bases---for example the directions aligned with weights is distinguished from the point of view of the model architecture---then fixing such a basis one can also use componentwise operations on the gradient vectors such as the squaring, division, taking squareroots etc.\ used in Adam.
 \end{itemize}
 
-\subsection*{Loss as log-likelihood} 
-
-There is an interpretation of $\ell_i(\theta)$ as the negative log likelihood of observing  the label $y$ given the input $\vec{x}$ and the parameter $\vec{\theta}$. This interpretation makes sense when $f(\vec{x}, \vec{\theta}$ is supposed to be a model of how the label data gets generated.  But we can still see the consequences of such an interpretation. So our assumption is 
-\[
-	\ell(\theta) = -\log \Prob(y | \vec{x}, \vec{\theta}) = - \log \Prob(\vec{x}, y | \vec{\theta}) + \text{const.}
-\] 
-
-\subsection*{Distributions on the parameter space} 
-\subsection*{Entropy and $KL$-divergence} 
 
 
 \end{document}
