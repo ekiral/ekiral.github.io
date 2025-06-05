@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="emk" />
+  <title>Some Notation</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <!-- This loads Google's tracking library -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3Q7M9XHEG5"></script>
+
+  <!-- This initializes tracking on your page -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-3Q7M9XHEG5');  // Your unique ID goes here
+  </script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Some Notation</h1>
+<p class="author">emk</p>
+</header>
+<p>Let <span class="math inline">\(\mathcal{X}\times
+\mathcal{Y}\)</span> be the data space split along an input-label line.
+The hypothesis class is a collection of functions <span
+class="math inline">\(f \in \mathcal{F}\)</span> <span
+class="math display">\[f : \mathcal{X}\times \Theta \to
+\mathcal{Y}.\]</span> For example, the hypothesis class could be a
+neural network with <span class="math inline">\(P\)</span> weights (and
+biases), then <span class="math inline">\(\Theta = \mathbb{R}^P\)</span>
+and <span class="math inline">\(f(\mathbf{\boldsymbol{x}},
+\mathbf{\boldsymbol{\theta}})\)</span> would be the function defined by
+the network.</p>
+<p>A <em>solution</em> to the supervised learning problem could be a
+<span class="math inline">\(\mathbf{\boldsymbol{\theta}}^*\)</span> (a
+set of parameters) such that <span
+class="math display">\[f(\mathbf{\boldsymbol{x}}_i,
+\mathbf{\boldsymbol{\theta}}^*) \approx y_i\]</span> for all given
+(training) data points <span
+class="math inline">\(\{(\mathbf{\boldsymbol{x}}_i, y_i)\}_{i = 1}^N
+\subseteq \mathcal{X}\times \mathcal{Y}\)</span>. The whole enterprise
+on the assumption that <span class="math inline">\(f\)</span> also
+predicts the label for yet unseen data; i.e. <span
+class="math inline">\(f(\mathbf{\boldsymbol{x}}_{\text{new}},
+\mathbf{\boldsymbol{\theta}}^*) \approx y_{\text{new}}\)</span> for yet
+unseen data <span
+class="math inline">\((\mathbf{\boldsymbol{x}}_{\text{new}},
+y_{\text{new}})\)</span> assumed to come from the same distribution as
+the training data in <span class="math inline">\(\mathcal{X}\times
+\mathcal{Y}\)</span>. Whether this is possible heavily depends on the
+hypothesis class <span class="math inline">\(\mathcal{F}\)</span>. Those
+functions describable by a neural network and easily discoverable by the
+common gradient based algorithms have proven to work well for
+distributions of data we have collected and thrown at these machine
+learning models.</p>
+<p>Finding this <span
+class="math inline">\(\mathbf{\boldsymbol{\theta}}^*\)</span> is
+typically achieved by a variant of gradient descent on the loss function
+defined of the form <span class="math display">\[\label{eq:lossfn}
+    \ell(\mathbf{\boldsymbol{\theta)}} = \frac{1}{N} \sum_{i = 1}^N
+\ell_i(\mathbf{\boldsymbol{\theta}}) + R(\mathbf{\boldsymbol{\theta}})
+\quad \text{ with } \quad \ell_i(\mathbf{\boldsymbol{\theta}}) =
+c(f(\mathbf{\boldsymbol{x}}_i, \mathbf{\boldsymbol{\theta}}),
+y_i),\]</span> where <span class="math inline">\(R :\Theta \to
+\mathbb{R}_{\geq 0 }\)</span> is is called the regularizer, responsible
+for biasing the hypothesis space to simpler functions (usually meaning
+smaller norm parameters), and <span class="math inline">\(c :
+\mathcal{Y}\times \mathcal{Y}\to \mathbb{R}_{\geq 0}\)</span> is called
+the cost function, measuring how far a prediction <span
+class="math inline">\(\hat y\)</span> is from <span
+class="math inline">\(y\)</span> with <span class="math inline">\(c(\hat
+y, y)\)</span> (usually <span class="math inline">\(c(y, y) =
+0\)</span>).</p>
+<ul>
+<li><p>For classification problems (with <span
+class="math inline">\(K\)</span> classes) it is common to take <span
+class="math inline">\(\mathcal{Y} =  \Delta^K = \{(p_1, \ldots, p_K) \in
+\mathbb{R}^K : p_i \geq 0, \sum_{i = 1}^K p_i = 1\}\)</span> the
+probability <span class="math inline">\(K\)</span>-simplex, and the cost
+function as the cross entropy loss <span class="math inline">\(c(\hat y,
+y) = - \sum_{i = 1}^k y_i \log \hat y_i\)</span>.</p></li>
+<li><p>It is possible to consider <span class="math inline">\(c :
+\widehat{\mathcal{Y}} \times \mathcal{Y}\to \mathbb{R}_{\geq
+0}\)</span>, for example when the labels <span
+class="math inline">\(y_i\)</span> were given as indices and not one-hot
+vectors. But unless there is a correspondence between <span
+class="math inline">\(\widehat{\mathcal{Y}}
+\rightarrow  \mathcal{Y}\)</span> we wouldn’t be able to use <span
+class="math inline">\(f: \mathcal{X}\times \Theta \to
+\widehat{\mathcal{Y}}\)</span> as a label-predictor.</p></li>
+<li><p>For the regression problem, with <span
+class="math inline">\(\mathcal{Y}= \mathbb{R}^{\text{out}}\)</span> it
+is common to take the <span class="math inline">\(L^2\)</span>-norm as
+the cost function <span class="math inline">\(c(\hat y, y) = \|\hat y -
+y\|^2\)</span>.</p></li>
+<li><p>The parameter space <span class="math inline">\(\Theta\)</span>
+needs to be a differentiable manifold and <span
+class="math inline">\(\ell\)</span> needs to be a differentiable
+function of <span
+class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span> (at generic
+points) in order for the gradient methods to make sense.</p></li>
+<li><p>The most ubiquitous setting is when <span
+class="math inline">\(\Theta = \mathbb{R}^P\)</span> and we then use the
+gradient descent method <span
+class="math inline">\(\mathbf{\boldsymbol{\theta}}^{\text{updated}} =
+\mathbf{\boldsymbol{\theta}} - \alpha \nabla
+\ell(\mathbf{\boldsymbol{\theta}})\)</span>.</p></li>
+<li><p>On a <em>not necessarily flat</em> manifold, we would need a
+retraction function <span class="math display">\[\qquad \qquad
+r_{\mathbf{\boldsymbol{\theta}}} : T_{\mathbf{\boldsymbol{\theta}}}
+\Theta \to \Theta  \text{ satisfying }
+r_{\mathbf{\boldsymbol{\theta}}}(\mathbf{\boldsymbol{0}}) =
+\mathbf{\boldsymbol{\theta}} \text{ and }
+\frac{\,\mathrm{d}r_{\mathbf{\boldsymbol{\theta}}}(t
+\mathbf{\boldsymbol{v}})} {\,\mathrm{d}t}\bigg|_{t = 0} =
+\mathbf{\boldsymbol{v}},\]</span> or a partial retraction function <span
+class="math inline">\(r_{\mathbf{\boldsymbol{\theta}}}: U \to
+\Theta\)</span> for a neighborhood <span
+class="math inline">\(\mathbf{\boldsymbol{0}} \in U \subseteq
+T_{\mathbf{\boldsymbol{\theta}}}\Theta\)</span>. The raison d’être such
+a retraction is to be able to move on <span
+class="math inline">\(\Theta\)</span> starting from <span
+class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span>, in the
+direction of <span class="math inline">\(\mathbf{\boldsymbol{v}}\in
+T_\mathbf{\boldsymbol{\theta}} \Theta\)</span> and we update the values
+of the parameters by <span
+class="math inline">\(\mathbf{\boldsymbol{\theta}}^{\text{updated}} :=
+r_\mathbf{\boldsymbol{\theta}}(- \alpha \nabla
+\ell(\mathbf{\boldsymbol{\theta}}))\)</span>, valid for small enough
+step size <span class="math inline">\(\alpha&gt;0\)</span> in partial
+retractions. For <span class="math inline">\(\Theta\)</span> an open
+domain in a flat affine space, <span
+class="math inline">\(r_{\mathbf{\boldsymbol{\theta}}}
+(\mathbf{\boldsymbol{v}}) = \mathbf{\boldsymbol{v}} +
+\mathbf{\boldsymbol{\theta}}\)</span> does the job, and gives us the
+gradient descent for <span class="math inline">\(\mathbf{\boldsymbol{v}}
+= -\alpha \nabla\ell(\mathbf{\boldsymbol{\theta}})\)</span>.</p></li>
+<li><p>The data space <span class="math inline">\(\mathcal{X}\)</span>
+does not technically need any structure more than a set, however in most
+circumstances it will be a differentiable manifold—in fact simply <span
+class="math inline">\(\mathcal{X}= \mathbb{R}^{\text{in}}\)</span>—and
+in the case of neural networks, <span
+class="math inline">\(f(\mathbf{\boldsymbol{x}},
+\mathbf{\boldsymbol{\theta}})\)</span> is a differentiable function of
+<span class="math inline">\(\mathbf{\boldsymbol{x}}\)</span>, using
+which we can compute saliency of features.</p></li>
+<li><p>In case of <span class="math inline">\(\Theta =
+\mathbb{R}^P\)</span>, we have <span
+class="math inline">\(T_\mathbf{\boldsymbol{\theta}} \Theta \cong
+\mathbb{R}^P\)</span> for all points <span
+class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span> on the
+manifold, and in fact they can be all canonically identified with one
+another. That is why we can assume all the gradients <span
+class="math inline">\(\nabla \ell(\mathbf{\boldsymbol{\theta}})\)</span>
+are living in the same vector space, and why it is meaningful to
+accumulate gradients from past steps such as in momentum.</p></li>
+<li><p>If furthermore the the tangent spaces <span
+class="math inline">\(T_{\mathbf{\boldsymbol{\theta}}}\)</span> have
+distinguished bases—for example the directions aligned with weights is
+distinguished from the point of view of the model architecture—then
+fixing such a basis one can also use componentwise operations on the
+gradient vectors such as the squaring, division, taking squareroots
+etc. used in Adam.</p></li>
+</ul>
+<h2 class="unnumbered" id="loss-as-log-likelihood">Loss as
+log-likelihood</h2>
+<p>There is an interpretation of <span
+class="math inline">\(\ell_i(\theta)\)</span> as the negative log
+likelihood of observing the label <span class="math inline">\(y\)</span>
+given the input <span
+class="math inline">\(\mathbf{\boldsymbol{x}}\)</span> and the parameter
+<span class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span>. This
+interpretation makes sense when <span
+class="math inline">\(f(\mathbf{\boldsymbol{x}},
+\mathbf{\boldsymbol{\theta}}\)</span> is supposed to be a model of how
+the label data gets generated. But we can still see the consequences of
+such an interpretation. So our assumption is <span
+class="math display">\[\ell(\theta) = -\log \mathop{\mathrm{Prob}}(y |
+\mathbf{\boldsymbol{x}}, \mathbf{\boldsymbol{\theta}}) = - \log
+\mathop{\mathrm{Prob}}(\mathbf{\boldsymbol{x}}, y |
+\mathbf{\boldsymbol{\theta}}) + \text{const.}\]</span></p>
+<h2 class="unnumbered"
+id="distributions-on-the-parameter-space">Distributions on the parameter
+space</h2>
+<h2 class="unnumbered" id="entropy-and-kl-divergence">Entropy and <span
+class="math inline">\(KL\)</span>-divergence</h2>
+</body>
+</html>

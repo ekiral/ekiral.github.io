@@ -1,0 +1,57 @@
+\documentclass[12pt]{amsart}
+\input{./preamble}
+
+
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\DeclareMathOperator{\Prob}{Prob}
+
+\title{Some Notation}
+\author{emk}
+\begin{document}
+
+\maketitle
+
+Let $\calX \times \calY$ be the data space split along an input-label line. The hypothesis class is a collection of functions $f \in \mathcal{F}$
+\[
+	f : \calX \times \Theta \to \calY.
+\]
+For example, the hypothesis class could be a neural network with $P$ weights (and biases), then $\Theta = \R^P$ and $f(\vec{x}, \vec{\theta})$ would be the function defined by the network.
+
+A \emph{solution} to the supervised learning problem could be a $\vec{\theta}^*$ (a set of parameters) such that $$f(\vec{x}_i, \vec{\theta}^*) \approx y_i$$
+for all given (training) data points $\{(\vec{x}_i, y_i)\}_{i = 1}^N \subseteq \calX \times \calY$. The whole enterprise on the assumption that $f$ also predicts the label for yet unseen data; i.e. $f(\vec{x}_{\text{new}}, \vec{\theta}^*) \approx y_{\text{new}}$ for yet unseen data $(\vec{x}_{\text{new}}, y_{\text{new}})$ assumed to come from the same distribution as the training data in $\calX \times \calY$. Whether this is possible heavily depends on the hypothesis class $\mathcal{F}$. Those functions describable by a neural network and easily discoverable by the common gradient based algorithms have proven to work well for distributions of data we have collected and thrown at these machine learning models.
+
+Finding this $\vec \theta^*$ is typically achieved by a variant of gradient descent on the loss function defined of the form
+\begin{equation}\label{eq:lossfn}
+	\ell(\vec{\theta)} = \frac{1}{N} \sum_{i = 1}^N \ell_i(\vec{\theta}) + R(\vec{\theta}) \quad \text{ with } \quad \ell_i(\vec{\theta}) = c(f(\vec{x}_i, \vec{\theta}), y_i),
+\end{equation}
+where $R :\Theta \to \R_{\geq 0 }$ is is called the regularizer, responsible for biasing the hypothesis space to simpler functions (usually meaning smaller norm parameters), and $c : \calY \times \calY \to \R_{\geq 0}$ is called the cost function, measuring how far a prediction $\hat y$ is from $y$ with  $c(\hat y, y)$ (usually $c(y, y) = 0$). 
+
+\begin{itemize}
+\item For classification problems (with $K$ classes) it is common to take $\mathcal{Y} =  \Delta^K = \{(p_1, \ldots, p_K) \in \R^K : p_i \geq 0, \sum_{i = 1}^K p_i = 1\}$ the probability $K$-simplex, and the cost function as the cross entropy loss $c(\hat y, y) = - \sum_{i = 1}^k y_i \log \hat y_i$.
+\item It is possible to consider $c : \widehat{\calY} \times \calY \to \R_{\geq 0}$, for example when the labels $y_i$ were given as indices and not one-hot vectors. But unless there is a correspondence between $\widehat{\calY} \rightarrow  \calY$ we wouldn't be able to use $f: \calX \times \Theta \to \widehat{\calY}$ as a label-predictor.
+\item For the regression problem, with $\calY = \R^{\text{out}}$ it is common to take the $L^2$-norm as the cost function $c(\hat y, y) = \|\hat y - y\|^2$.
+\item The parameter space $\Theta$ needs to be a differentiable manifold and $\ell$ needs to be a differentiable function of $\vec{\theta}$ (at generic points) in order for the gradient methods to make sense. 
+\item The most ubiquitous setting is when $\Theta = \R^P$ and we then use the gradient descent method  $\vec{\theta}^{\text{updated}} = \vec{\theta} - \alpha \nabla \ell(\vec \theta)$. 
+\item On a \emph{not necessarily flat} manifold, we would need a retraction function
+\[
+	\qquad \qquad r_{\vec{\theta}} : T_{\vec{\theta}} \Theta \to \Theta  \text{ satisfying } r_{\vec{\theta}}(\vec{0}) = \vec{\theta} \text{ and } \frac{\d r_{\vec{\theta}}(t \vec{v})} {\d t}\bigg|_{t = 0} = \vec{v},
+\]
+or a partial retraction function $r_{\vec{\theta}}: U \to \Theta$ for a neighborhood $\vec{0} \in U \subseteq T_{\vec{\theta}}\Theta$. The raison d'\^{e}tre such a retraction is to be able to move on $\Theta$ starting from $\vec{\theta}$, in the direction of $\vec{v}\in T_\vec{\theta} \Theta$ and we update the values of the parameters by $\vec\theta^{\text{updated}} := r_\vec{\theta}(- \alpha \nabla \ell(\vec{\theta}))$, valid for small enough step size $\alpha>0$ in partial retractions. For $\Theta$ an open domain in a flat affine space, $r_{\vec{\theta}} (\vec{v}) = \vec{v} + \vec{\theta}$ does the job, and gives us the gradient descent for $\vec{v} = -\alpha \nabla\ell(\vec{\theta})$.
+\item The data space $\calX$ does not technically need any structure more than a set, however in most circumstances it will be a differentiable manifold---in fact simply $\calX = \R^{\text{in}}$---and in the case of neural networks, $f(\vec{x}, \vec{\theta})$ is a differentiable function of $\vec{x}$, using which we can compute saliency of features.
+\item In case of $\Theta = \R^P$, we have $T_\vec{\theta} \Theta \cong \R^P$ for all points $\vec{\theta}$ on the manifold, and in fact they can be all canonically identified with one another. That is why we can assume all the gradients $\nabla \ell(\vec{\theta})$ are living in the same vector space, and why it is meaningful to accumulate gradients from past steps such as in momentum.
+\item If furthermore the the tangent spaces $T_{\vec{\theta}}$ have distinguished bases---for example the directions aligned with weights is distinguished from the point of view of the model architecture---then fixing such a basis one can also use componentwise operations on the gradient vectors such as the squaring, division, taking squareroots etc.\ used in Adam.
+\end{itemize}
+
+\subsection*{Loss as log-likelihood} 
+
+There is an interpretation of $\ell_i(\theta)$ as the negative log likelihood of observing  the label $y$ given the input $\vec{x}$ and the parameter $\vec{\theta}$. This interpretation makes sense when $f(\vec{x}, \vec{\theta}$ is supposed to be a model of how the label data gets generated.  But we can still see the consequences of such an interpretation. So our assumption is 
+\[
+	\ell(\theta) = -\log \Prob(y | \vec{x}, \vec{\theta}) = - \log \Prob(\vec{x}, y | \vec{\theta}) + \text{const.}
+\] 
+
+\subsection*{Distributions on the parameter space} 
+\subsection*{Entropy and $KL$-divergence} 
+
+
+\end{document}
