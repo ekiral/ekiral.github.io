@@ -85,7 +85,7 @@ header#title-block-header {
 }
 
 .author {
-    order:3;
+    order:2;
     text-align: right;
     font-style: italic;
     font-size: 16px;
@@ -95,11 +95,11 @@ header#title-block-header {
 }
 
 .date {
-    order: 3;
+    order: 2;
     text-align: right;
     color: #777777;
     font-size: 14px;
-    margin-top: 2rem;
+    margin-top: 0;
 }
 
 

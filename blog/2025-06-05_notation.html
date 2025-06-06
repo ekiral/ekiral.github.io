@@ -44,7 +44,7 @@
 <p class="date">2025/06/05</p>
 </header>
 <p>Let <span class="math inline">\(\mathcal{X}\times
-\mathcal{Y}\)</span> be the data space split along an input-label line.
+\mathcal{Y}\)</span> be the data space split along an input-label axis.
 The hypothesis class is a collection of functions <span
 class="math inline">\(f \in \mathcal{F}\)</span> <span
 class="math display">\[f : \mathcal{X}\times \Theta \to
@@ -61,9 +61,10 @@ class="math display">\[f(\mathbf{\boldsymbol{x}}_i,
 \mathbf{\boldsymbol{\theta}}^*) \approx y_i\]</span> for all given
 (training) data points <span
 class="math inline">\(\{(\mathbf{\boldsymbol{x}}_i, y_i)\}_{i = 1}^N
-\subseteq \mathcal{X}\times \mathcal{Y}\)</span>. The whole enterprise
-on the assumption that <span class="math inline">\(f\)</span> also
-predicts the label for yet unseen data; i.e. <span
+\subseteq \mathcal{X}\times \mathcal{Y}\)</span>. The whole of machine
+learning enterprise rests on the assumption, or rather observation that
+<span class="math inline">\(f\)</span> also predicts the label for yet
+unseen data; i.e. <span
 class="math inline">\(f(\mathbf{\boldsymbol{x}}_{\text{new}},
 \mathbf{\boldsymbol{\theta}}^*) \approx y_{\text{new}}\)</span> for yet
 unseen data <span
@@ -178,9 +179,9 @@ class="math inline">\(\nabla \ell(\mathbf{\boldsymbol{\theta}})\)</span>
 are living in the same vector space, and why it is meaningful to
 accumulate gradients from past steps such as in momentum.</p></li>
 <li><p>If furthermore the the tangent spaces <span
-class="math inline">\(T_{\mathbf{\boldsymbol{\theta}}}\)</span> have
-distinguished bases—for example the directions aligned with weights is
-distinguished from the point of view of the model architecture—then
+class="math inline">\(T_{\mathbf{\boldsymbol{\theta}}}\Theta\)</span>
+have distinguished bases—for example the directions aligned with weights
+is distinguished from the point of view of the model architecture—then
 fixing such a basis one can also use componentwise operations on the
 gradient vectors such as the squaring, division, taking squareroots
 etc. used in Adam.</p></li>

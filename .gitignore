@@ -2,6 +2,7 @@
 /blog/*.synctex.gz
 /blog/*.log
 /blog/*.aux
-
+/blog/*.out
+/blog/*.bbl
 
 .DS_Store
