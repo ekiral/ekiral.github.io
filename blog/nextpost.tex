@@ -1,0 +1,23 @@
+\documentclass[12pt]{amsart}
+\input{./preamble}
+
+
+\title{Loss as log-likelihood}
+\author{emk}
+\begin{document}
+
+\maketitle
+
+Gıven a parametrized model, and a loss contribution $\ell_i(\vec{\theta)$
+
+There is an interpretation of $\ell_i(\vec{\theta})$ as the negative log likelihood of observing  the label $y$ \emph{given} the input $\vec{x}$ and the parameter $\vec{\theta}$. This interpretation can make sense when the loss between $f(\vec{x}, \vec{\theta})$ and the true label $y$ is supposed to be a model of how the label data gets generated.  But we can still see the consequences of such an interpretation. So our assumption is 
+\[
+	\ell(\theta) = -\log \Prob(y | \vec{x}, \vec{\theta}) = - \log \Prob(\vec{x}, y | \vec{\theta}) + \text{const.}
+\] 
+wrong.
+
+\subsection*{Distributions on the parameter space} 
+\subsection*{Entropy and $KL$-divergence} 
+
+
+\end{document}

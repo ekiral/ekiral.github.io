@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Blog Posts - E. Mehmet Kıral</title>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <link rel="stylesheet" href="math-blog.css" />
+
+    <!-- This loads Google's tracking library -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3Q7M9XHEG5"></script>
+
+<!-- This initializes tracking on your page -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-3Q7M9XHEG5');  // Your unique ID goes here
+</script>
+    
+</head>
+<body>
+    <h1>Mathematical Vignettes</h1>
+    
+    <p>
+    Below are short expositions of machine learning topics, with 
+    a mathematical focus. The posts are not meant to be a first 
+    introduction to the topic (except perhaps for a mathematician), 
+    but rather exhibit the way I think about these topics and what 
+    I personally focus on.
+</p>
+
+    <div class="nav-home">
+        <a href="../index.html">← Back to Homepage</a>
+    </div>
+
+
+    <div class="post-preview">
+        <input type="checkbox" id="post1" class="toggle">
+        <label for="post1" class="post-title">
+            <span class="expand-icon">+</span>
+            Loss as log-likelihood
+        </label>
+        <div class="post-meta">No date</div>
+        <div class="post-summary">
+            <p>There is an interpretation of <span class="math inline">\(\ell_i(\mathbf{\boldsymbol{\theta}})\)</span> as
+the negative log likelihood of observing the label <span class="math inline">\(y\)</span> given the input <span class="math inline">\(\mathbf{\boldsymbol{x}}\)</span> and the parameter
+<span class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span>. This
+interpretation makes sense when <span class="math inline">\(f(\mathbf{\boldsymbol{x}},
+\mathbf{\boldsymbol{\theta}})\)</span> is supposed to be a model of how
+the label data gets generated. But we can still see the consequences of
+such an interpretation. So our assumption is <span class="math display">\[\ell(\theta) = -\log \mathop{\mathrm{Prob}}(y |
+\mathbf{\boldsymbol{x}}, \mathbf{\boldsymbol{\theta}}) = - \log
+\mathop{\mathrm{Prob}}(\mathbf{\boldsymbol{x}}, y |
+\mathbf{\boldsymbol{\theta}}) + \text{const.}\]</span> wrong....
+            <a href="nextpost.html" class="read-more">Read full post →</a>
+            </p>
+            
+        </div>
+    </div>
+
+    <div class="post-preview">
+        <input type="checkbox" id="post2" class="toggle">
+        <label for="post2" class="post-title">
+            <span class="expand-icon">+</span>
+            Some Notation
+        </label>
+        <div class="post-meta">2025/06/05</div>
+        <div class="post-summary">
+            <p>Let <span class="math inline">\(\mathcal{X}\times
+\mathcal{Y}\)</span> be the data space split along an input-label axis.
+The hypothesis class is a collection of functions <span class="math inline">\(f \in \mathcal{F}\)</span> <span class="math display">\[f : \mathcal{X}\times \Theta \to
+\mathcal{Y}.\]</span> For example, the hypothesis class could be a
+neural network with <span class="math inline">\(P\)</span> weights (and
+biases), then <span class="math inline">\(\Theta = \mathbb{R}^P\)</span>
+and <span class="math inline">\(f(\mathbf{\boldsymbol{x}},
+\mathbf{\boldsymbol{\theta}})\)</span> would be the function defined by
+the network....
+            <a href="2025-06-05_notation.html" class="read-more">Read full post →</a>
+            </p>
+            
+        </div>
+    </div>
+
+
+    <div class="generated-info">
+        <p>This index was automatically generated on June 08, 2025 at 04:36 PM</p>
+    </div>
+
+</body>
+</html>

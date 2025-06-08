@@ -338,3 +338,92 @@ thead th {
         widows: 3;
     }
 }
+
+
+.nav-home {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.nav-home a {
+    color: #111111;
+    text-decoration: none;
+    border-bottom: 1px solid #111111;
+}
+
+.post-preview {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.0rem;
+}
+
+.post-preview:last-child {
+    border-bottom: none;
+}
+
+.toggle {
+    display: none;
+}
+
+.post-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #111111;
+    margin-bottom: 0.5rem;
+}
+
+.expand-icon {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+    transition: transform 0.5s ease;
+    color: #666;
+}
+
+.post-meta {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.post-summary {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+    color: #555;
+}
+
+.toggle:checked + .post-title + .post-meta + .post-summary {
+    max-height: none;        /* Let content determine height */
+    max-height: 50vh;        /* But cap at 50% of viewport */
+    overflow-y: auto;        /* Add scroll if still too long */
+    padding-top: 0.5rem;
+    padding-bottom: 0;
+}
+
+.toggle:checked + .post-title .expand-icon {
+    transform: rotate(45deg);
+}
+
+.read-more {
+    display: inline-flex;
+    margin-top: 0;
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.read-more:hover {
+    text-decoration: underline;
+}
+
+.generated-info {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #999;
+    margin-top: 3rem;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}

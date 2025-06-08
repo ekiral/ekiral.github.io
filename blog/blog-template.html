@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  $if(author)$<meta name="author" content="$author$" />$endif$
+  $if(date)$<meta name="dcterms.date" content="$date$" />$endif$
+  $if(keywords)$<meta name="keywords" content="$for(keywords)$$keywords$$sep$, $endfor$" />$endif$
+  $if(description)$<meta name="description" content="$description$" />$endif$
+  <title>$if(title)$$title$$else$E. Mehmet Kıral's Blog$endif$</title>
+  
+
+  
+  <!-- CSS -->
+  $if(css)$
+  <link rel="stylesheet" href="math-blog.css" />
+  $endif$
+
+  <!-- MathJax (only if --mathjax flag is used) -->
+  $if(mathjax)$
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  $endif$
+  
+  
+  <!-- Analytics or other header includes -->
+  $if(include-in-header)$
+  $for(include-in-header)$
+  $include-in-header$
+  $endfor$
+  $endif$
+</head>
+
+<body>
+  <!-- Title -->
+  $if(title)$
+  <header class="title-header">
+    <h1 class="title">$title$</h1>
+  </header>
+  $endif$
+
+  <!-- Navigation -->
+  <nav class="post-nav">
+    <a href="../index.html">← Back to Homepage</a>
+    $if(blog-index)$
+    | <a href="$blog-index$">← Back to Blog Index</a>
+    $else$
+    | <a href="blog-index.html">← Back to Blog Index</a>
+    $endif$
+  </nav>
+
+  <!-- Main content -->
+  <main>
+    $body$
+  </main>
+
+  <!-- Bottom navigation (optional) -->
+  <nav class="post-nav-bottom">
+    $if(blog-index)$
+    <a href="$blog-index$">← Back to Blog Index</a>
+    $else$
+    <a href="blog-index.html">← Back to Blog Index</a>
+    $endif$
+  </nav>
+
+  <!-- Author and date at bottom -->
+  $if(author)$$if(date)$
+  <footer class="post-footer">
+    <div class="author-date">
+      <p class="author">$author$</p>
+      <p class="date">$date$</p>
+    </div>
+  </footer>
+  $endif$$endif$
+
+</body>
+</html>

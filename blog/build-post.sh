@@ -69,8 +69,26 @@ CSS_FILE="math-blog.css"
 # Optional analytics file
 ANALYTICS_FILE="analytics.html"
 
+# After the CSS_FILE and ANALYTICS_FILE definitions, add:
+TEMPLATE_FILE="blog-template.html"
+
 # Build pandoc command
 PANDOC_CMD="pandoc \"$INPUT_FILE\" -o \"$OUTPUT_FILE\" --mathjax --standalone"
+
+# Add template if it exists
+if [ -f "$TEMPLATE_FILE" ]; then
+    PANDOC_CMD="$PANDOC_CMD --template=\"$TEMPLATE_FILE\""
+    print_status "Using template file: $TEMPLATE_FILE"
+fi
+
+# Add CSS if it exists
+if [ -f "$CSS_FILE" ]; then
+    PANDOC_CMD="$PANDOC_CMD --css \"$CSS_FILE\""
+    print_status "Using CSS file: $CSS_FILE"
+else
+    print_warning "CSS file '$CSS_FILE' not found - using default styling"
+fi
+
 
 # Add CSS if it exists
 if [ -f "$CSS_FILE" ]; then

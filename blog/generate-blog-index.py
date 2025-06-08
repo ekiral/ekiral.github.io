@@ -26,18 +26,27 @@ def extract_post_info(html_file):
         date_elem = soup.find(class_='date')
         date = date_elem.get_text().strip() if date_elem else "No date"
         
-        # Extract first paragraph as summary (skip if it's too short)
         paragraphs = soup.find_all('p')
-        summary = ""
+        summary_parts = []
+        char_count = 0
+        
         for p in paragraphs:
             text = p.get_text().strip()
-            if len(text) > 50:  # Skip very short paragraphs
-                summary = text[:300] + "..." if len(text) > 300 else text
-                break
+            if len(text) > 20:  # Skip very short paragraphs
+                summary_parts.append(str(p))
+                char_count += len(text)
+                
+                # Stop before we get too long, and avoid cutting display math
+                if char_count > 200:
+                    # Check if next element is display math
+                    next_element = p.find_next()
+                    if next_element and 'math display' in str(next_element):
+                        # Include the display math too
+                        summary_parts.append(str(next_element))
+                    break
         
-        if not summary:
-            summary = "Click to read this post about mathematical concepts and machine learning."
-        
+        summary = ''.join(summary_parts)[:-4] + '...'
+
         return {
             'title': title,
             'date': date,
@@ -52,12 +61,12 @@ def extract_post_info(html_file):
 def is_blog_post(filename):
     """Check if a file is a blog post (not an index or main page)."""
     name = filename.lower()
-    # Skip any files that look like index pages
+    # Skip any files that look like index pages and analytics.
     skip_patterns = [
         'index.html',
         'blog-index',
-        'main.html',
-        'home.html'
+        'analytics.html',
+        'blog-header.html'
     ]
     
     for pattern in skip_patterns:
@@ -116,8 +125,10 @@ def generate_css_template(posts):
         </label>
         <div class="post-meta">{post['date']}</div>
         <div class="post-summary">
-            <p>{post['summary']}</p>
+            {post['summary']}
             <a href="{post['filename']}" class="read-more">Read full post →</a>
+            </p>
+            
         </div>
     </div>
 '''
@@ -127,115 +138,23 @@ def generate_css_template(posts):
 <head>
     <meta charset="utf-8">
     <title>Blog Posts - E. Mehmet Kıral</title>
-    <style>
-        body {{
-            font-family: 'ETBook', 'Palatino', 'Book Antiqua', 'Georgia', serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            font-size: 18px;
-            line-height: 1.6;
-            color: #111111;
-            background-color: #fffff8;
-        }}
 
-        h1 {{
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            text-align: center;
-        }}
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-        .nav-home {{
-            text-align: center;
-            margin-bottom: 3rem;
-        }}
+    <link rel="stylesheet" href="math-blog.css" />
 
-        .nav-home a {{
-            color: #111111;
-            text-decoration: none;
-            border-bottom: 1px solid #111111;
-        }}
-
-        .post-preview {{
-            margin-bottom: 2rem;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 1.5rem;
-        }}
-
-        .post-preview:last-child {{
-            border-bottom: none;
-        }}
-
-        .toggle {{
-            display: none;
-        }}
-
-        .post-title {{
-            font-size: 1.3rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            color: #111111;
-            margin-bottom: 0.5rem;
-        }}
-
-        .expand-icon {{
-            margin-right: 0.5rem;
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-            color: #666;
-        }}
-
-        .post-meta {{
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 1rem;
-        }}
-
-        .post-summary {{
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            color: #555;
-        }}
-
-        .toggle:checked + .post-title + .post-meta + .post-summary {{
-            max-height: 200px;
-            padding-top: 1rem;
-        }}
-
-        .toggle:checked + .post-title .expand-icon {{
-            transform: rotate(45deg);
-        }}
-
-        .read-more {{
-            display: inline-block;
-            margin-top: 1rem;
-            color: #3498db;
-            text-decoration: none;
-            font-weight: bold;
-        }}
-
-        .read-more:hover {{
-            text-decoration: underline;
-        }}
-
-        .generated-info {{
-            text-align: center;
-            font-size: 0.8rem;
-            color: #999;
-            margin-top: 3rem;
-            border-top: 1px solid #eee;
-            padding-top: 1rem;
-        }}
-    </style>
+    {Path("analytics.html").read_text()}
+    
 </head>
 <body>
     <h1>Mathematical Vignettes</h1>
     
+    {Path("blog-header.html").read_text()}
+
     <div class="nav-home">
-        <a href="index.html">← Back to Homepage</a>
+        <a href="../index.html">← Back to Homepage</a>
     </div>
 
 {posts_html}
