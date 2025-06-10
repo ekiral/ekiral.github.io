@@ -127,6 +127,11 @@ p {
     width: 100%;
     max-width: none;
     display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    /* Add subtle scrollbar styling */
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
 }
 
 /* Equation numbering */
@@ -181,37 +186,47 @@ figure {
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
-    max-width: 55%;
+    max-width: 100%;
     -webkit-margin-start: 0;
     -webkit-margin-end: 0;
     margin: 0 0 3em 0;
+    text-align: center;
 }
 
 figcaption {
-    float: right;
-    clear: right;
-    margin-top: 0;
+    float: none;
+    clear: both;
+    margin-top: 1rem;
     margin-bottom: 0;
-    font-size: 1.1rem;
+    padding-left: 5%;
+    font-size: 1rem;
     line-height: 1.6;
     vertical-align: baseline;
     position: relative;
-    max-width: 40%;
+    max-width: 80%;
+    text-align: left;
+    color: #666;
+    font-style: italic;
 }
 
 figure.fullwidth figcaption {
-    margin-right: 24%;
+    margin-right: 0;
+    max-width:80%
 }
 
 /* Image styling */
 img {
     max-width: 100%;
+    border: none;
     height: auto;
+    display:block;
+    margin: 0 auto;
 }
 
 /* Code blocks */
 pre, code {
-    font-family: "Lucida Console", "Lucida Sans Typewriter", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
+    font-family: "Lucida Console", "Lucida Sans Typewriter", "Liberation Mono", "DejaVu Sans Mono", 
+    "Bitstream Vera Sans Mono", "Courier New", monospace;
 }
 
 code {

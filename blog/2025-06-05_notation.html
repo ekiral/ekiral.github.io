@@ -8,7 +8,7 @@
   <meta name="dcterms.date" content="2025/06/05" />
   
   
-  <title>Setting the stage: objects and notation</title>
+  <title>Setting the stage: objects &amp; notation</title>
   
 
   
@@ -26,7 +26,7 @@
 <body>
   <!-- Title -->
     <header class="title-header">
-    <h1 class="title">Setting the stage: objects and notation</h1>
+    <h1 class="title">Setting the stage: objects &amp; notation</h1>
   </header>
   
   <!-- Navigation -->
@@ -160,7 +160,19 @@
     \mathbf{\boldsymbol{\theta}}\)</span> does the job, and gives us the
     gradient descent for <span
     class="math inline">\(\mathbf{\boldsymbol{v}} = -\alpha
-    \nabla\ell(\mathbf{\boldsymbol{\theta}})\)</span>.</p></li>
+    \nabla\ell(\mathbf{\boldsymbol{\theta}})\)</span>.</p>
+    <figure>
+    <img src="./figures/retraction.svg" style="width:70.0%" />
+    <figcaption>Gradient descent on the parameter manifold. The dotted
+    path <span class="math inline">\(\{
+    r_{\mathbf{\boldsymbol{\theta}}}(t\mathbf{\boldsymbol{v}}): t \in
+    [0,1]\}\)</span> on the manifold is produced via the retraction.
+    Starts off aligned with <span
+    class="math inline">\(\mathbf{\boldsymbol{v}}\)</span> when <span
+    class="math inline">\(t\)</span> is infinitesimally small, and the
+    retraction makes sure that the path stays on the manifold for
+    nonzero finite <span class="math inline">\(t\)</span>.</figcaption>
+    </figure></li>
     <li><p>The data space <span
     class="math inline">\(\mathcal{X}\)</span> does not technically need
     any structure more than a set, however in most circumstances it will

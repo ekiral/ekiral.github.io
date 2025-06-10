@@ -89,15 +89,6 @@ else
     print_warning "CSS file '$CSS_FILE' not found - using default styling"
 fi
 
-
-# Add CSS if it exists
-if [ -f "$CSS_FILE" ]; then
-    PANDOC_CMD="$PANDOC_CMD --css \"$CSS_FILE\""
-    print_status "Using CSS file: $CSS_FILE"
-else
-    print_warning "CSS file '$CSS_FILE' not found - using default styling"
-fi
-
 # Add analytics if file exists (for future use)
 if [ -f "$ANALYTICS_FILE" ]; then
     PANDOC_CMD="$PANDOC_CMD -H \"$ANALYTICS_FILE\""
