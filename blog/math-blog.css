@@ -129,9 +129,68 @@ p {
     display: block;
     overflow-x: auto;
     overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
     /* Add subtle scrollbar styling */
     scrollbar-width: thin;
     scrollbar-color: #ccc transparent;
+}
+/* Webkit scrollbar styling for display math */
+.math.display::-webkit-scrollbar {
+    height: 8px; /* Slightly larger for mobile */
+}
+
+
+.math.display::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+    border-radius: 4px;
+}
+
+.math.display::-webkit-scrollbar-thumb {
+    background-color: #666;
+    border-radius: 4px;
+    border: 1px solid #999;
+}
+
+.math.display::-webkit-scrollbar-thumb:hover {
+    background-color: #333;
+}
+
+/* Fix for inline math overflow */
+.math.inline {
+    display: inline-block;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+/* Mobile-specific improvements */
+@media screen and (max-width: 600px) {
+    /* Make scrollbars more visible on mobile */
+    .math.display::-webkit-scrollbar {
+        height: 10px;
+    }
+    
+    .math.display::-webkit-scrollbar-thumb {
+        background-color: #333;
+    }
+    
+    /* Add padding to math containers for easier scrolling */
+    .math.display {
+        padding: 0.5rem;
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+        background-color: rgba(0,0,0,0.02);
+        border-radius: 4px;
+    }
+    
+    /* Ensure inline math doesn't break layout */
+    .math.inline {
+        max-width: calc(100vw - 2rem);
+        font-size: 0.9em; /* Slightly smaller on mobile */
+    }
 }
 
 /* Equation numbering */
@@ -140,6 +199,8 @@ p {
     margin-right: 1rem;
     color: #7f8c8d;
 }
+
+
 
 /* Lists */
 ul, ol {
@@ -151,6 +212,20 @@ ul, ol {
 li {
     margin-bottom: 0.5rem;
 }
+
+/* Mobile list improvements */
+@media screen and (max-width: 600px) {
+    ul, ol {
+        padding-left: 1.5rem;
+    }
+    
+    li {
+        /* Better text wrapping on mobile */
+        word-break: break-word;
+        overflow-wrap: break-word;
+    }
+}
+
 
 /* Emphasis */
 em {
