@@ -4,5 +4,8 @@
 /blog/*.aux
 /blog/*.out
 /blog/*.bbl
+/blog/*.dvi
 
 .DS_Store
+
+/blog/svg-inkscape

@@ -96,23 +96,26 @@
     <ul>
     <li><p>For classification problems (with <span
     class="math inline">\(K\)</span> classes) it is common to take <span
-    class="math inline">\(\mathcal{Y} =  \Delta^K = \{(p_1, \ldots, p_K)
-    \in \mathbb{R}^K : p_i \geq 0, \sum_{i = 1}^K p_i = 1\}\)</span> the
-    probability <span class="math inline">\(K\)</span>-simplex, and the
-    cost function as the cross entropy loss <span
-    class="math inline">\(c(\hat y, y) = - \sum_{i = 1}^k y_i \log \hat
-    y_i\)</span>.</p></li>
-    <li><p>It is possible to consider <span class="math inline">\(c :
-    \widehat{\mathcal{Y}} \times \mathcal{Y}\to \mathbb{R}_{\geq
-    0}\)</span>, for example when the labels <span
-    class="math inline">\(y_i\)</span> were given as indices and not
-    one-hot vectors. But unless there is a correspondence between <span
+    class="math inline">\(\mathcal{Y} =  \Delta^K =
+    \{\mathbf{\boldsymbol{p}} = (p_1, \ldots, p_K) \in \mathbb{R}^K :
+    p_i \geq 0, \sum_{i = 1}^K p_i = 1\}\)</span> the probability <span
+    class="math inline">\(K\)</span>-simplex, and the cost function as
+    the cross entropy loss <span
+    class="math inline">\(c(\hat{\mathbf{\boldsymbol{p}}},
+    \mathbf{\boldsymbol{p}}) = - \sum_{i = 1}^k p_i \log \hat
+    p_i\)</span>.</p></li>
+    <li><p>It is possible to consider cost functions <span
+    class="math inline">\(c : \widehat{\mathcal{Y}} \times
+    \mathcal{Y}\to \mathbb{R}_{\geq 0}\)</span>, for example when the
+    labels <span class="math inline">\(y_i\)</span> were given as
+    indices and not one-hot vectors. But unless there is a
+    correspondence between <span
     class="math inline">\(\widehat{\mathcal{Y}}
     \rightarrow  \mathcal{Y}\)</span> we wouldn’t be able to use <span
     class="math inline">\(f: \mathcal{X}\times \Theta \to
     \widehat{\mathcal{Y}}\)</span> as a label-predictor.</p></li>
-    <li><p>For the regression problem, with <span
-    class="math inline">\(\mathcal{Y}= \mathbb{R}^{\text{out}}\)</span>
+    <li><p>For the regression problem with <span
+    class="math inline">\(\mathcal{Y}= \mathbb{R}^{\text{out}}\)</span>,
     it is common to take the <span
     class="math inline">\(L^2\)</span>-norm as the cost function <span
     class="math inline">\(c(\hat y, y) = \|\hat y -
@@ -130,37 +133,33 @@
     class="math inline">\(\mathbf{\boldsymbol{\theta}}^{\text{updated}}
     = \mathbf{\boldsymbol{\theta}} - \alpha \nabla
     \ell(\mathbf{\boldsymbol{\theta}})\)</span>.</p></li>
-    <li><p>On a <em>not necessarily flat</em> manifold, we would need a
-    retraction function <span class="math display">\[\qquad \qquad
+    <li><p>On a <em>not necessarily flat</em> manifold, at a point <span
+    class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span> on the
+    manifold, we would need a retraction function <span
+    class="math display">\[\qquad \qquad
     r_{\mathbf{\boldsymbol{\theta}}} : T_{\mathbf{\boldsymbol{\theta}}}
-    \Theta \to \Theta  \text{ satisfying }
+    \Theta \to \Theta \quad \text{ satisfying } \quad
     r_{\mathbf{\boldsymbol{\theta}}}(\mathbf{\boldsymbol{0}}) =
     \mathbf{\boldsymbol{\theta}} \text{ and }
     \frac{\,\mathrm{d}r_{\mathbf{\boldsymbol{\theta}}}(t
     \mathbf{\boldsymbol{v}})} {\,\mathrm{d}t}\bigg|_{t = 0} =
-    \mathbf{\boldsymbol{v}},\]</span> or a partial retraction function
+    \mathbf{\boldsymbol{v}},\]</span> —or a partial retraction function
     <span class="math inline">\(r_{\mathbf{\boldsymbol{\theta}}}: U \to
     \Theta\)</span> for a neighborhood <span
     class="math inline">\(\mathbf{\boldsymbol{0}} \in U \subseteq
-    T_{\mathbf{\boldsymbol{\theta}}}\Theta\)</span>. The raison d’être
-    such a retraction is to be able to move on <span
+    T_{\mathbf{\boldsymbol{\theta}}}\Theta\)</span>—in order to
+    formulate a gradient descent step. The raison d’être such a
+    retraction is to be able to move on <span
     class="math inline">\(\Theta\)</span> starting from <span
     class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span>, in the
     direction of <span class="math inline">\(\mathbf{\boldsymbol{v}}\in
-    T_\mathbf{\boldsymbol{\theta}} \Theta\)</span> and we update the
-    values of the parameters by <span
+    T_\mathbf{\boldsymbol{\theta}} \Theta\)</span>. We update the
+    parameter values by <span
     class="math inline">\(\mathbf{\boldsymbol{\theta}}^{\text{updated}}
     := r_\mathbf{\boldsymbol{\theta}}(- \alpha \nabla
-    \ell(\mathbf{\boldsymbol{\theta}}))\)</span>, valid for small enough
+    \ell(\mathbf{\boldsymbol{\theta}}))\)</span>—valid for small enough
     step size <span class="math inline">\(\alpha&gt;0\)</span> in
-    partial retractions. For <span class="math inline">\(\Theta\)</span>
-    an open domain in a flat affine space, <span
-    class="math inline">\(r_{\mathbf{\boldsymbol{\theta}}}
-    (\mathbf{\boldsymbol{v}}) = \mathbf{\boldsymbol{v}} +
-    \mathbf{\boldsymbol{\theta}}\)</span> does the job, and gives us the
-    gradient descent for <span
-    class="math inline">\(\mathbf{\boldsymbol{v}} = -\alpha
-    \nabla\ell(\mathbf{\boldsymbol{\theta}})\)</span>.</p>
+    partial retractions.</p>
     <figure>
     <img src="./figures/retraction.svg" style="width:70.0%" />
     <figcaption>Gradient descent on the parameter manifold. The dotted
@@ -173,6 +172,14 @@
     retraction makes sure that the path stays on the manifold for
     nonzero finite <span class="math inline">\(t\)</span>.</figcaption>
     </figure></li>
+    <li><p>For <span class="math inline">\(\Theta\)</span> an open
+    domain in a flat affine space, <span
+    class="math inline">\(r_{\mathbf{\boldsymbol{\theta}}}
+    (\mathbf{\boldsymbol{v}}) = \mathbf{\boldsymbol{v}} +
+    \mathbf{\boldsymbol{\theta}}\)</span> does the job, and gives us the
+    gradient descent for <span
+    class="math inline">\(\mathbf{\boldsymbol{v}} = -\alpha
+    \nabla\ell(\mathbf{\boldsymbol{\theta}})\)</span>.</p></li>
     <li><p>The data space <span
     class="math inline">\(\mathcal{X}\)</span> does not technically need
     any structure more than a set, however in most circumstances it will
