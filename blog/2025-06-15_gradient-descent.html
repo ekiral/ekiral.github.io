@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="emk" />
+  <meta name="dcterms.date" content="2025/06/15" />
+  
+  
+  <title>Steepest descent <em>needs</em> geometry</title>
+  
+
+  
+  <!-- CSS -->
+    <link rel="stylesheet" href="math-blog.css" />
+  
+  <!-- MathJax (only if --mathjax flag is used) -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+  
+  <!-- Analytics or other header includes -->
+  </head>
+
+<body>
+  <!-- Title -->
+    <header class="title-header">
+    <h1 class="title">Steepest descent <em>needs</em> geometry</h1>
+  </header>
+  
+  <!-- Navigation -->
+  <nav class="post-nav">
+    <a href="../index.html">← Back to Homepage</a>
+        | <a href="blog-index.html">← Back to Blog Index</a>
+      </nav>
+
+  <!-- Main content -->
+  <main>
+    <p>The oft repeated mantra goes as follows; “<em>Gradient descent
+    takes a step in the direction of steepest descent,</em>” with which
+    nothing is wrong, but needs to be put under the microscope.</p>
+    <p>For a loss function <span class="math inline">\(\ell : \Theta \to
+    \mathbb{R}\)</span>, and a step size <span
+    class="math inline">\(\alpha &gt; 0\)</span>, the update algorithm
+    is <span class="math display">\[\label{eq:gradient_descent}
+        \mathbf{\boldsymbol{\theta}} \leftarrow
+    \mathbf{\boldsymbol{\theta}} - \alpha \nabla
+    \ell(\mathbf{\boldsymbol{\theta}}).\]</span> The intuitive picture
+    is that we stand on a hilly landscape during an thick morning fog
+    and want to go downhill. We can only sense the immediate steepness
+    and take a step downhill along the negative gradient direction.</p>
+    <p>The first—rather obvious—point is that <span
+    class="math inline">\(\nabla
+    \ell(\mathbf{\boldsymbol{\theta}})\)</span> is local information on
+    the loss landscape at <span
+    class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span>. Not as
+    much as the simple value <span
+    class="math inline">\(\ell(\mathbf{\boldsymbol{\theta}})\)</span>,
+    it contains more information about the loss landscape in the the
+    vicinity of <span
+    class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span>; but
+    absent some uniformity constraints on <span
+    class="math inline">\(\ell\)</span>, no information about even the
+    smallest neighborhood <span class="math inline">\(U \ni
+    \mathbf{\boldsymbol{\theta}}\)</span> can be gleaned. In other
+    words—in full generality—there is nothing stopping <span
+    class="math inline">\(\ell(\mathbf{\boldsymbol{\theta}} +
+    \mathbf{\boldsymbol{\epsilon}}_0)\)</span> from taking all kinds of
+    crazy values for any fixed <span
+    class="math inline">\(\mathbf{\boldsymbol{\epsilon}}_0\)</span> no
+    matter how well behaved or how gargantuan <span
+    class="math inline">\(\nabla
+    \ell(\mathbf{\boldsymbol{\theta}})\)</span> is or no matter how
+    small a perturbation <span
+    class="math inline">\(\mathbf{\boldsymbol{\epsilon}}_0\)</span>
+    is.</p>
+    <p>The knowledge we have is infinitesimal, meaning it only pertains
+    to the tangent directions <span
+    class="math inline">\(\mathbf{\boldsymbol{v}} \in
+    T_{\mathbf{\boldsymbol{\theta}}}\Theta\)</span>, i.e. we only know
+    about the directional derivatives.</p>
+    <p>Thus, the second point to ponder reveals itself. The question
+    which “<em>the gradient!</em>” answers to is not a problem about the
+    function <span class="math inline">\(\ell\)</span> on the manifold
+    <span class="math inline">\(\Theta\)</span>, nor is it a question
+    about <span class="math inline">\(\ell\)</span> only at the point
+    <span class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span>.
+    It has to be, on the tangent space, i.e. reverse engineering the
+    problem to which <a href="#eq:gradient_descent"
+    data-reference-type="eqref"
+    data-reference="eq:gradient_descent">[eq:gradient_descent]</a> is an
+    answer to, we arrive at finding the direction of steepest descent of
+    the <em>linearization</em> of <span
+    class="math inline">\(\ell\)</span> at <span
+    class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span>, <span
+    class="math display">\[\begin{aligned}
+    L:&amp; T_{\mathbf{\boldsymbol{\theta}}}\Theta
+    \rightarrow  \mathbb{R}\\
+    &amp;\mathbf{\boldsymbol{v}} \mapsto
+    \ell(\mathbf{\boldsymbol{\theta}}) + \nabla
+    \ell(\mathbf{\boldsymbol{\theta}})^\top \mathbf{\boldsymbol{v}}.
+    \end{aligned}\]</span> This is a function of vectors <span
+    class="math inline">\(\mathbf{\boldsymbol{v}} \in
+    T_{\mathbf{\boldsymbol{\theta}}}\Theta\)</span> in the tangent
+    space, and among these vectors we will search.</p>
+    <p>Third point is hidden in the the superlatives
+    <em>steepest/fastest</em>, meaning that we have solved an
+    optimization problem, and found extrema. We compare the rate of
+    change of this linearized function <span
+    class="math inline">\(L\)</span> in various directions, but rate of
+    change according to what!? We need a notion of <em>unit
+    distance</em> if we are to compare the change in <span
+    class="math inline">\(L\)</span> when a unit distance has been
+    traversed. Riemannian metrics give precisely that, i.e. lengths of
+    vectors on tangent spaces. In fact they give a bit more, a
+    Riemannian metric means there is a bilinear form for every tangent
+    space of a manifold <span class="math display">\[\begin{aligned}
+            \omega_{\mathbf{\boldsymbol{\theta}}} :&amp;
+    T_{\mathbf{\boldsymbol{\theta}}}\Theta \times
+    T_{\mathbf{\boldsymbol{\theta}}}\Theta \to \mathbb{R}.\\
+            &amp; (\mathbf{\boldsymbol{v}}, \mathbf{\boldsymbol{w}})
+    \mapsto
+    \omega_{\mathbf{\boldsymbol{\theta}}}(\mathbf{\boldsymbol{v}},
+    \mathbf{\boldsymbol{w}})
+    \end{aligned}\]</span> which should be thought of as an inner
+    product.<a href="#fn1" class="footnote-ref" id="fnref1"
+    role="doc-noteref"><sup>1</sup></a><a href="#fn2"
+    class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>
+    giving us lengths of vectors <span
+    class="math inline">\(\|\mathbf{\boldsymbol{v}}\|_{\mathbf{\boldsymbol{\theta}}}^2:=
+    \omega_{\mathbf{\boldsymbol{\theta}}}(\mathbf{\boldsymbol{v}},
+    \mathbf{\boldsymbol{v}})\)</span> and cosines of angles between two
+    vectors.</p>
+    <p>Different metrics would give us different steepest descent
+    directions. Indeed, if for a metric, going more along a certain
+    route means less distance is traveled then that is bound to effect
+    the direction for which <span
+    class="math inline">\(L(\mathbf{\boldsymbol{v}})\)</span> loses
+    value the most.</p>
+    <p>The metric (in the standard basis) can be written as <span
+    class="math inline">\(\omega_{\mathbf{\boldsymbol{\theta}}}(\mathbf{\boldsymbol{v}},
+    \mathbf{\boldsymbol{v}}) = \mathbf{\boldsymbol{v}}^\top
+    F_{\mathbf{\boldsymbol{\theta}}} \mathbf{\boldsymbol{v}}\)</span>
+    where the <span class="math inline">\(ij\)</span>-th entry of the
+    matrix <span
+    class="math inline">\(F_{\mathbf{\boldsymbol{\theta}}}\)</span> is
+    given by <span
+    class="math inline">\(\omega_{\mathbf{\boldsymbol{\theta}}}(\mathbf{\boldsymbol{e}}_i,
+    \mathbf{\boldsymbol{e}}_j)\)</span>. Riemannian metrics are
+    symmetric and positive definite, and so too is the matrix <span
+    class="math inline">\(\mathbf{\boldsymbol{F}}_{\mathbf{\boldsymbol{\theta}}}\)</span>.
+    The Euclidean metric corresponds to the identity matrix.</p>
+    <p>We therefore solve the constrained optimization problem <span
+    class="math display">\[\begin{aligned}
+        \text{minimize }  &amp; L(\mathbf{\boldsymbol{v}}) \\
+        \text{subject to } &amp;
+    \|\mathbf{\boldsymbol{v}}\|_{\mathbf{\boldsymbol{\theta}}} = 1.
+    \end{aligned}\]</span> In coordinates, the Lagrangian can be written
+    as <span class="math display">\[\mathcal{L}(\mathbf{\boldsymbol{v}},
+    \beta) = L(\mathbf{\boldsymbol{v}}) +
+    \beta(\mathbf{\boldsymbol{v}}^\top F_{\mathbf{\boldsymbol{\theta}}}
+    \mathbf{\boldsymbol{v}} - 1) = \ell(\mathbf{\boldsymbol{\theta}}) +
+    \nabla \ell(\mathbf{\boldsymbol{\theta}})^\top
+    \mathbf{\boldsymbol{v}} + \mathbf{\boldsymbol{v}}^\top
+    F_{\mathbf{\boldsymbol{\theta}}} \mathbf{\boldsymbol{v}}\]</span>
+    and solving for <span class="math inline">\(\frac{\partial
+    \mathcal{L}}{\partial \mathbf{\boldsymbol{v}}} =
+    \mathbf{\boldsymbol{0}}\)</span>, <span
+    class="math inline">\(frac{\partial \mathcal{L}}{\partial \beta} =
+    0\)</span>, we get <span
+    class="math display">\[\nabla\ell(\mathbf{\boldsymbol{\theta}} + 2
+    \beta F_\mathbf{\boldsymbol{\theta}} \mathbf{\boldsymbol{v}} =
+    0\]</span></p>
+    <section id="footnotes" class="footnotes footnotes-end-of-document"
+    role="doc-endnotes">
+    <hr />
+    <ol>
+    <li id="fn1"><p>Bilinear functions can also be viewed as linear
+    functions from the tensor product <span
+    class="math inline">\(\omega_{\mathbf{\boldsymbol{\theta}}} :
+    T_{\mathbf{\boldsymbol{\theta}}}\Theta \otimes
+    T_{\mathbf{\boldsymbol{\theta}}}\Theta\)</span> without any loss of
+    information<a href="#fnref1" class="footnote-back"
+    role="doc-backlink">↩︎</a></p></li>
+    <li id="fn2"><p>We will also require our metrics to be postive
+    definite, i.e.the inner product satisfies <span
+    class="math inline">\(\omega_{\mathbf{\boldsymbol{\theta}}}
+    (\mathbf{\boldsymbol{v}}, \mathbf{\boldsymbol{v}}) \geq 0\)</span>
+    for all tangent vectors <span
+    class="math inline">\(\mathbf{\boldsymbol{v}} \in
+    T_{\mathbf{\boldsymbol{\theta}}}\Theta\)</span> with equality only
+    when <span class="math inline">\(\mathbf{\boldsymbol{v}}\)</span>
+    vanishes.<a href="#fnref2" class="footnote-back"
+    role="doc-backlink">↩︎</a></p></li>
+    </ol>
+    </section>
+  </main>
+
+  <!-- Bottom navigation (optional) -->
+  <nav class="post-nav-bottom">
+        <a href="blog-index.html">← Back to Blog Index</a>
+      </nav>
+
+  <!-- Author and date at bottom -->
+    <footer class="post-footer">
+    <div class="author-date">
+      <p class="author">emk</p>
+      <p class="date">2025/06/15</p>
+    </div>
+  </footer>
+  
+
+</body>
+</html>

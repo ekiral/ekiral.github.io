@@ -64,9 +64,8 @@ def is_blog_post(filename):
     # Skip any files that look like index pages and analytics.
     skip_patterns = [
         'index.html',
-        'blog-index',
+        'blog-',
         'analytics.html',
-        'blog-header.html'
     ]
     
     for pattern in skip_patterns:

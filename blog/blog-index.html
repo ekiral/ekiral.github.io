@@ -42,21 +42,22 @@
         <input type="checkbox" id="post1" class="toggle">
         <label for="post1" class="post-title">
             <span class="expand-icon">+</span>
-            Loss as log-likelihood
+            Steepest descent needs geometry
         </label>
-        <div class="post-meta">No date</div>
+        <div class="post-meta">2025/06/15</div>
         <div class="post-summary">
-            <p>There is an interpretation of <span class="math inline">\(\ell_i(\mathbf{\boldsymbol{\theta}})\)</span> as
-the negative log likelihood of observing the label <span class="math inline">\(y\)</span> given the input <span class="math inline">\(\mathbf{\boldsymbol{x}}\)</span> and the parameter
-<span class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span>. This
-interpretation makes sense when <span class="math inline">\(f(\mathbf{\boldsymbol{x}},
-\mathbf{\boldsymbol{\theta}})\)</span> is supposed to be a model of how
-the label data gets generated. But we can still see the consequences of
-such an interpretation. So our assumption is <span class="math display">\[\ell(\theta) = -\log \mathop{\mathrm{Prob}}(y |
-\mathbf{\boldsymbol{x}}, \mathbf{\boldsymbol{\theta}}) = - \log
-\mathop{\mathrm{Prob}}(\mathbf{\boldsymbol{x}}, y |
-\mathbf{\boldsymbol{\theta}}) + \text{const.}\]</span> wrong....
-            <a href="nextpost.html" class="read-more">Read full post →</a>
+            <p>The oft repeated mantra goes as follows; “<em>Gradient descent
+    takes a step in the direction of steepest descent,</em>” with which
+    nothing is wrong, but needs to be put under the microscope.</p><p>For a loss function <span class="math inline">\(\ell : \Theta \to
+    \mathbb{R}\)</span>, and a step size <span class="math inline">\(\alpha &gt; 0\)</span>, the update algorithm
+    is <span class="math display">\[\label{eq:gradient_descent}
+        \mathbf{\boldsymbol{\theta}} \leftarrow
+    \mathbf{\boldsymbol{\theta}} - \alpha \nabla
+    \ell(\mathbf{\boldsymbol{\theta}}).\]</span> The intuitive picture
+    is that we stand on a hilly landscape during an thick morning fog
+    and want to go downhill. We can only sense the immediate steepness
+    and take a step downhill along the negative gradient direction....
+            <a href="2025-06-15_gradient-descent.html" class="read-more">Read full post →</a>
             </p>
             
         </div>
@@ -66,19 +67,19 @@ such an interpretation. So our assumption is <span class="math display">\[\ell(\
         <input type="checkbox" id="post2" class="toggle">
         <label for="post2" class="post-title">
             <span class="expand-icon">+</span>
-            Some Notation
+            Setting the stage: objects & notation
         </label>
         <div class="post-meta">2025/06/05</div>
         <div class="post-summary">
             <p>Let <span class="math inline">\(\mathcal{X}\times
-\mathcal{Y}\)</span> be the data space split along an input-label axis.
-The hypothesis class is a collection of functions <span class="math inline">\(f \in \mathcal{F}\)</span> <span class="math display">\[f : \mathcal{X}\times \Theta \to
-\mathcal{Y}.\]</span> For example, the hypothesis class could be a
-neural network with <span class="math inline">\(P\)</span> weights (and
-biases), then <span class="math inline">\(\Theta = \mathbb{R}^P\)</span>
-and <span class="math inline">\(f(\mathbf{\boldsymbol{x}},
-\mathbf{\boldsymbol{\theta}})\)</span> would be the function defined by
-the network....
+    \mathcal{Y}\)</span> be the data space split along an input-label
+    axis. The hypothesis class is a collection of functions <span class="math inline">\(f \in \mathcal{F}\)</span> <span class="math display">\[f : \mathcal{X}\times \Theta \to
+    \mathcal{Y}.\]</span> For example, the hypothesis class could be a
+    neural network with <span class="math inline">\(P\)</span> weights
+    (and biases), then <span class="math inline">\(\Theta =
+    \mathbb{R}^P\)</span> and <span class="math inline">\(f(\mathbf{\boldsymbol{x}},
+    \mathbf{\boldsymbol{\theta}})\)</span> would be the function defined
+    by the network....
             <a href="2025-06-05_notation.html" class="read-more">Read full post →</a>
             </p>
             
@@ -87,7 +88,7 @@ the network....
 
 
     <div class="generated-info">
-        <p>This index was automatically generated on June 08, 2025 at 04:36 PM</p>
+        <p>This index was automatically generated on June 11, 2025 at 11:55 AM</p>
     </div>
 
 </body>

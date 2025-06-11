@@ -1,0 +1,56 @@
+\documentclass[12pt]{amsart}
+\input{./preamble}
+
+\title{Steepest descent \emph{needs} geometry}
+\author{emk}
+\date{2025/06/15}
+\begin{document}
+
+\maketitle
+
+The oft repeated mantra goes as follows; ``\emph{Gradient descent takes a step in the direction of steepest descent,}'' with which nothing is wrong, but needs to be put under the microscope.
+
+For a loss function $\ell : \Theta \to \R$, and a step size $\alpha > 0$, the update algorithm is
+\begin{equation}\label{eq:gradient_descent}
+	\vec{\theta} \leftarrow \vec{\theta} - \alpha \nabla \ell(\vec{\theta}).
+\end{equation}
+The intuitive picture is that we stand on a hilly landscape during an thick morning fog and want to go downhill. We can only sense the immediate steepness and take a step downhill along the negative gradient direction. 
+
+The first---rather obvious---point is that $\nabla \ell(\vec{\theta})$ is local information on the loss landscape at $\vec{\theta}$. Not as much as the simple value $\ell(\vec{\theta})$, it contains more information about the loss landscape in the the vicinity of $\vec{\theta}$; but absent some uniformity constraints on $\ell$, no information about even the smallest neighborhood $U \ni \vec{\theta}$ can be gleaned. In other words---in full generality---there is nothing stopping $\ell(\vec{\theta} + \vec{\epsilon}_0)$ from taking all kinds of crazy values for any fixed $\vec{\epsilon}_0$ no matter how well behaved or how gargantuan $\nabla \ell(\vec{\theta})$ is or no matter how small a perturbation $\vec{\epsilon}_0$ is. 
+
+The knowledge we have is infinitesimal, meaning it only pertains to the tangent directions $\vec{v} \in T_{\vec{\theta}}\Theta$, i.e.\ we only know about the directional derivatives. 
+
+Thus, the second point to ponder reveals itself. The question which ``\emph{the gradient!}'' answers to is not a problem about the function $\ell$ on the manifold $\Theta$, nor is it a question about $\ell$ only at the point $\vec{\theta}$. It has to be, on the tangent space, i.e. reverse engineering the problem to which \eqref{eq:gradient_descent} is an answer to, we arrive at finding the direction of steepest descent of the  \emph{linearization} of $\ell$ at $\vec{\theta}$, 
+\begin{align*}
+L:& T_{\vec{\theta}}\Theta \rightarrow  \R\\
+&\vec{v} \mapsto \ell(\vec{\theta}) + \nabla \ell(\vec{\theta})^\top \vec{v}.
+\end{align*} 
+This is a function of vectors $\vec{v} \in T_{\vec{\theta}}\Theta$ in the tangent space, and among these vectors we will search.
+ 
+Third point is hidden in the the superlatives \emph{steepest/fastest}, meaning that we have solved an optimization problem, and found extrema. We compare the rate of change of this linearized function $L$ in various directions, but rate of change according to what!? We need a notion of \emph{unit distance} if we are to compare the change in $L$ when a unit distance has been traversed. Riemannian metrics give precisely that, i.e.\ lengths of vectors on tangent spaces. In fact they give a bit more, a Riemannian metric means there is a bilinear form for every tangent space of a manifold
+ \begin{align*}
+ 		\omega_{\vec{\theta}} :& T_{\vec{\theta}}\Theta \times T_{\vec{\theta}}\Theta \to \R.\\
+ 		& (\vec{v}, \vec{w}) \mapsto \omega_{\vec{\theta}}(\vec{v}, \vec{w})
+ \end{align*}
+ which should be thought of as an inner product.\footnote{Bilinear functions can also be viewed as linear functions from the tensor product $\omega_{\vec{\theta}} : T_{\vec{\theta}}\Theta \otimes T_{\vec{\theta}}\Theta$ without any loss of information}\footnote{We will also require our metrics to be postive definite, i.e.the inner product satisfies $\omega_{\vec{\theta}} (\vec{v}, \vec{v}) \geq 0$ for all tangent vectors $\vec{v} \in T_{\vec{\theta}}\Theta$ with equality only when $\vec{v}$ vanishes.} giving us lengths of vectors $\|\vec{v}\|_{\vec{\theta}}^2:= \omega_{\vec{\theta}}(\vec{v}, \vec{v})$ and cosines of angles between two vectors.
+ 
+ Different metrics would give us different steepest descent directions. Indeed, if for a metric, going more along a certain route means less distance is traveled then that is bound to effect the direction for which $L(\vec{v})$ loses value the most. 
+ 
+ The metric (in the standard basis) can be written as $\omega_{\vec{\theta}}(\vec{v}, \vec{v}) = \vec{v}^\top F_{\vec{\theta}} \vec{v}$ where the $ij$-th entry of the matrix $F_{\vec{\theta}}$ is given by $\omega_{\vec{\theta}}(\vec{e}_i, \vec{e}_j)$. Riemannian metrics are symmetric and positive definite, and so too is the matrix $\vec{F}_{\vec{\theta}}$. The Euclidean metric corresponds to the identity matrix. 
+ 
+ We therefore solve the constrained optimization problem
+\begin{align*}
+	\text{minimize }  & L(\vec{v}) \\
+	\text{subject to } & \|\vec{v}\|_{\vec{\theta}} = 1.
+\end{align*} 	
+In coordinates, the Lagrangian can be written as 
+\[
+	\mathcal{L}(\vec{v}, \beta) = L(\vec{v}) + \beta(\vec{v}^\top F_{\vec{\theta}} \vec{v} - 1) = \ell(\vec{\theta}) + \nabla \ell(\vec{\theta})^\top \vec{v} + \vec{v}^\top F_{\vec{\theta}} \vec{v}
+\]
+and solving for $\frac{\partial \mathcal{L}}{\partial \vec{v}} = \vec{0}$, $frac{\partial \mathcal{L}}{\partial \beta} = 0$, we get
+\[
+	\nabla\ell(\vec{\theta} + 2 \beta F_\vec{\theta} \vec{v} = 0
+\]
+
+
+\end{document}
