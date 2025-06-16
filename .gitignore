@@ -6,6 +6,6 @@
 /blog/*.bbl
 /blog/*.dvi
 
-.DS_Store
+*.DS_Store
 
 /blog/svg-inkscape
