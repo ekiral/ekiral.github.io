@@ -55,12 +55,12 @@
     \ell(\mathbf{\boldsymbol{\theta}})\)</span> is local information on
     the loss landscape at <span
     class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span>. Not as
-    much as the simple value <span
-    class="math inline">\(\ell(\mathbf{\boldsymbol{\theta}})\)</span>,
-    it contains more information about the loss landscape in the the
-    vicinity of <span
+    localized as the simple value <span
+    class="math inline">\(\ell(\mathbf{\boldsymbol{\theta}})\)</span>
+    though. No, it contains more information about the loss landscape in
+    the the vicinity of <span
     class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span>; but
-    absent some uniformity constraints on <span
+    absent some further uniformity constraints on <span
     class="math inline">\(\ell\)</span>, no information about even the
     smallest neighborhood <span class="math inline">\(U \ni
     \mathbf{\boldsymbol{\theta}}\)</span> can be gleaned. In other
@@ -86,8 +86,8 @@
     <span class="math inline">\(\Theta\)</span>, nor is it a question
     about <span class="math inline">\(\ell\)</span> only at the point
     <span class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span>.
-    It has to be, on the tangent space, i.e. reverse engineering the
-    problem to which <a href="#eq:gradient_descent"
+    It is on the tangent space, it has to be. Thus reverse engineering
+    the problem to which <a href="#eq:gradient_descent"
     data-reference-type="eqref"
     data-reference="eq:gradient_descent">[eq:gradient_descent]</a> is an
     answer to, we arrive at finding the direction of steepest descent of
@@ -105,13 +105,12 @@
     T_{\mathbf{\boldsymbol{\theta}}}\Theta\)</span> in the tangent
     space, and among these vectors we will search.</p>
     <p>Third point is hidden in the the superlatives
-    <em>steepest/fastest</em>, meaning that we have solved an
-    optimization problem, and found extrema. We compare the rate of
-    change of this linearized function <span
-    class="math inline">\(L\)</span> in various directions, but rate of
-    change according to what!? We need a notion of <em>unit
-    distance</em> if we are to compare the change in <span
-    class="math inline">\(L\)</span> when a unit distance has been
+    <em>steepest/fastest</em>, indicating an optimization problem and
+    extrema are in play. We should compare the rate of change of this
+    linearized function <span class="math inline">\(L\)</span> in
+    various directions, but rate of change according to what!? We need a
+    notion of <em>unit distance</em> if we are to compare the change in
+    <span class="math inline">\(L\)</span> when a unit distance has been
     traversed. Riemannian metrics give precisely that, i.e. lengths of
     vectors on tangent spaces. In fact they give a bit more, a
     Riemannian metric means there is a bilinear form for every tangent
@@ -132,16 +131,21 @@
     \omega_{\mathbf{\boldsymbol{\theta}}}(\mathbf{\boldsymbol{v}},
     \mathbf{\boldsymbol{v}})\)</span> and cosines of angles between two
     vectors.</p>
-    <p>Different metrics would give us different steepest descent
-    directions. Indeed, if for a metric, going more along a certain
-    route means less distance is traveled then that is bound to effect
-    the direction for which <span
+    <p>Different metrics gives different steepest descent directions.
+    Indeed, if going north, less distance is traveled for metric number
+    <span class="math inline">\(1\)</span> versus for metric number
+    <span class="math inline">\(2\)</span>, but vice versa going east;
+    then this fact is bound to effect the direction for which <span
     class="math inline">\(L(\mathbf{\boldsymbol{v}})\)</span> loses
     value the most.</p>
-    <p>The metric (in the standard basis) can be written as <span
+    <p>The metric (in the a chosen basis<a href="#fn3"
+    class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>
+    <span
+    class="math inline">\(\{\mathbf{\boldsymbol{e}}_i\}_i\)</span>) can
+    be written as <span
     class="math inline">\(\omega_{\mathbf{\boldsymbol{\theta}}}(\mathbf{\boldsymbol{v}},
-    \mathbf{\boldsymbol{v}}) = \mathbf{\boldsymbol{v}}^\top
-    F_{\mathbf{\boldsymbol{\theta}}} \mathbf{\boldsymbol{v}}\)</span>
+    \mathbf{\boldsymbol{w}}) = \mathbf{\boldsymbol{v}}^\top
+    F_{\mathbf{\boldsymbol{\theta}}} \mathbf{\boldsymbol{w}}\)</span>
     where the <span class="math inline">\(ij\)</span>-th entry of the
     matrix <span
     class="math inline">\(F_{\mathbf{\boldsymbol{\theta}}}\)</span> is
@@ -150,28 +154,119 @@
     \mathbf{\boldsymbol{e}}_j)\)</span>. Riemannian metrics are
     symmetric and positive definite, and so too is the matrix <span
     class="math inline">\(\mathbf{\boldsymbol{F}}_{\mathbf{\boldsymbol{\theta}}}\)</span>.
-    The Euclidean metric corresponds to the identity matrix.</p>
+    The Euclidean metric corresponds to the identity matrix. For a
+    manifold, choosing a different local chart, and using the Identity
+    matrix for both will result in different directions as we see in
+    examples below.</p>
     <p>We therefore solve the constrained optimization problem <span
     class="math display">\[\begin{aligned}
-        \text{minimize }  &amp; L(\mathbf{\boldsymbol{v}}) \\
-        \text{subject to } &amp;
-    \|\mathbf{\boldsymbol{v}}\|_{\mathbf{\boldsymbol{\theta}}} = 1.
+    \label{eq:constrainedOptimization}
+        \text{minimize } \qquad  &amp; L(\mathbf{\boldsymbol{v}}) \notag
+    \\
+        \text{subject to } \qquad &amp;
+    \|\mathbf{\boldsymbol{v}}\|_{\mathbf{\boldsymbol{\theta}}}^2 = 1.
     \end{aligned}\]</span> In coordinates, the Lagrangian can be written
     as <span class="math display">\[\mathcal{L}(\mathbf{\boldsymbol{v}},
     \beta) = L(\mathbf{\boldsymbol{v}}) +
-    \beta(\mathbf{\boldsymbol{v}}^\top F_{\mathbf{\boldsymbol{\theta}}}
-    \mathbf{\boldsymbol{v}} - 1) = \ell(\mathbf{\boldsymbol{\theta}}) +
-    \nabla \ell(\mathbf{\boldsymbol{\theta}})^\top
-    \mathbf{\boldsymbol{v}} + \mathbf{\boldsymbol{v}}^\top
-    F_{\mathbf{\boldsymbol{\theta}}} \mathbf{\boldsymbol{v}}\]</span>
-    and solving for <span class="math inline">\(\frac{\partial
-    \mathcal{L}}{\partial \mathbf{\boldsymbol{v}}} =
-    \mathbf{\boldsymbol{0}}\)</span>, <span
-    class="math inline">\(frac{\partial \mathcal{L}}{\partial \beta} =
+    \beta(\|\mathbf{\boldsymbol{v}}\|_{\mathbf{\boldsymbol{\theta}}}^2 -
+    1) = \ell(\mathbf{\boldsymbol{\theta}}) + \nabla
+    \ell(\mathbf{\boldsymbol{\theta}})^\top \mathbf{\boldsymbol{v}} +
+    \beta \mathbf{\boldsymbol{v}}^\top F_{\mathbf{\boldsymbol{\theta}}}
+    \mathbf{\boldsymbol{v}} - \beta\]</span> and solving for <span
+    class="math inline">\(\frac{\partial \mathcal{L}}{\partial
+    \mathbf{\boldsymbol{v}}} = \mathbf{\boldsymbol{0}}\)</span>, <span
+    class="math inline">\(\frac{\partial \mathcal{L}}{\partial \beta} =
     0\)</span>, we get <span
-    class="math display">\[\nabla\ell(\mathbf{\boldsymbol{\theta}} + 2
+    class="math display">\[\nabla\ell(\mathbf{\boldsymbol{\theta}}) + 2
     \beta F_\mathbf{\boldsymbol{\theta}} \mathbf{\boldsymbol{v}} =
-    0\]</span></p>
+    0\]</span> so that the steepest descent direction <span
+    class="math inline">\(\mathbf{\boldsymbol{v}}\)</span> is aligned
+    with <span
+    class="math inline">\(F_{\mathbf{\boldsymbol{\theta}}}^{-1}\nabla
+    \ell(\mathbf{\boldsymbol{\theta}})\)</span>.</p>
+    <p>Therefore the gradient update rule with respect to the metric
+    <span
+    class="math inline">\(\omega_{\mathbf{\boldsymbol{\theta}}}\)</span>
+    which in local coordinates is written by <span
+    class="math inline">\(F_{\mathbf{\boldsymbol{\theta}}}\)</span>, is
+    given as <span class="math display">\[\label{eq:riemannianGD}
+        \mathbf{\boldsymbol{\theta}}^{\text{updated}} =
+    \mathbf{\boldsymbol{\theta}} - \alpha
+    F_{\mathbf{\boldsymbol{\theta}}}^{-1} \nabla
+    \ell(\mathbf{\boldsymbol{\theta}}),\]</span> or if the manifold
+    doesn’t allow for retractions as identity (see <a
+    href="https://ekiral.github.io/blog/2025-06-05_notation.html">this
+    older post</a>) then <span
+    class="math display">\[\label{eq:riemannianGDretraction}
+        \mathbf{\boldsymbol{\theta}}^{\text{updated}} =
+    r_{\mathbf{\boldsymbol{\theta}}}(- \alpha
+    F_{\mathbf{\boldsymbol{\theta}}}^{-1}\nabla
+    \ell(\mathbf{\boldsymbol{\theta}}))\]</span> for a retraction <span
+    class="math inline">\(r_{\mathbf{\boldsymbol{\theta}}} :
+    T_{\mathbf{\boldsymbol{\theta}}}\Theta \to \Theta\)</span>.</p>
+    <ul>
+    <li><p>Different metrics will lead to different directions of
+    steepest descent. For example if <span
+    class="math inline">\(\nabla\ell(\mathbf{\boldsymbol{\theta}}) =
+    \begin{bmatrix}
+    1 &amp; 1
+    \end{bmatrix}^\top\)</span> and the two metrics we have are given by
+    matrices <span
+    class="math display">\[F_{\mathbf{\boldsymbol{\theta}},1} =
+    \begin{bmatrix}
+        2&amp; 0\\ 0&amp;1
+        \end{bmatrix}
+        \quad \text{ and } \quad
+        F_{\mathbf{\boldsymbol{\theta}},2} = \begin{bmatrix}
+        1&amp;0\\0&amp;2
+        \end{bmatrix}\]</span> the directions of fastest ascent will be
+    <span class="math inline">\(\mathbf{\boldsymbol{v}}_1 =
+    \begin{bmatrix}
+    \tfrac{1}{2}  &amp; 1
+    \end{bmatrix}^\top\)</span> and <span
+    class="math inline">\(\mathbf{\boldsymbol{v}}_2 = \begin{bmatrix}
+    1&amp; \tfrac12
+    \end{bmatrix}^\top\)</span>.</p>
+    <figure>
+    <img src="./figures/fastestdescentdirection.svg"
+    style="width:50.0%" />
+    <figcaption>Steepest descent directions with respect to different
+    metrics. Intuitively it makes sense, in order to have the most value
+    change in the linear function, it makes sense to go the more and
+    whichever direction will allow you to go more without having your
+    vector become too large will have an advantage. So the directions of
+    steepest descent will differ among different metrics.</figcaption>
+    </figure></li>
+    <li><p>Preconditioning the gradient with a matrix corresponds to
+    choosing a different than Euclidean metric in your gradient
+    update.</p></li>
+    <li><p>The math doesn’t require that the metric <span
+    class="math inline">\(F_{\mathbf{\boldsymbol{\theta}}}\)</span> be
+    positive definite, only nondegenerate. So, even though it is harder
+    to interpret, we can optimize in vector spaces with spacetime and
+    timelike (<span
+    class="math inline">\(\omega_{\mathbf{\boldsymbol{\theta}}}(\mathbf{\boldsymbol{v}},
+    \mathbf{\boldsymbol{v}}) &lt;0\)</span>) vectors. The update rule <a
+    href="#eq:riemannianGD" data-reference-type="eqref"
+    data-reference="eq:riemannianGD">[eq:riemannianGD]</a> is the answer
+    now may be an answer for directions of shallowest descent <a
+    href="https://arxiv.org/pdf/1812.07643">see here</a>.</p></li>
+    <li><p>Newton’s method takes <span
+    class="math inline">\(F_{\mathbf{\boldsymbol{\theta}}} = \nabla^2
+    \ell(\mathbf{\boldsymbol{\theta}})\)</span>, i.e. the metric on the
+    tangent vectors is given by the Hessian of the loss function at that
+    point. However in this case, convexity is required for the Hessian
+    to be positive definite at every point.</p></li>
+    <li><p>Other notions of size can be used in the vector space <span
+    class="math inline">\(T_\mathbf{\boldsymbol{\theta}}
+    \Theta\)</span>. One such choice is called an <span
+    class="math inline">\(\ell^p\)</span> norm (or <span
+    class="math inline">\(L^p\)</span> norm for functions) where <span
+    class="math inline">\(\|\mathbf{\boldsymbol{v}}\|_{p} =
+    \left(\sum_{i = 1}^P |v_i|^p\right)^{1/p}\)</span> where <span
+    class="math inline">\(p \geq 1\)</span> and then the
+    optimal</p></li>
+    </ul>
     <section id="footnotes" class="footnotes footnotes-end-of-document"
     role="doc-endnotes">
     <hr />
@@ -180,11 +275,11 @@
     functions from the tensor product <span
     class="math inline">\(\omega_{\mathbf{\boldsymbol{\theta}}} :
     T_{\mathbf{\boldsymbol{\theta}}}\Theta \otimes
-    T_{\mathbf{\boldsymbol{\theta}}}\Theta\)</span> without any loss of
-    information<a href="#fnref1" class="footnote-back"
-    role="doc-backlink">↩︎</a></p></li>
+    T_{\mathbf{\boldsymbol{\theta}}}\Theta \to \mathbb{R}\)</span>
+    without any loss of information<a href="#fnref1"
+    class="footnote-back" role="doc-backlink">↩︎</a></p></li>
     <li id="fn2"><p>We will also require our metrics to be postive
-    definite, i.e.the inner product satisfies <span
+    definite, i.e. the inner product satisfies <span
     class="math inline">\(\omega_{\mathbf{\boldsymbol{\theta}}}
     (\mathbf{\boldsymbol{v}}, \mathbf{\boldsymbol{v}}) \geq 0\)</span>
     for all tangent vectors <span
@@ -192,6 +287,18 @@
     T_{\mathbf{\boldsymbol{\theta}}}\Theta\)</span> with equality only
     when <span class="math inline">\(\mathbf{\boldsymbol{v}}\)</span>
     vanishes.<a href="#fnref2" class="footnote-back"
+    role="doc-backlink">↩︎</a></p></li>
+    <li id="fn3"><p>Given local coordinates <span
+    class="math inline">\(\theta^i\)</span>, the directions <span
+    class="math inline">\(\partial_i\)</span> form a basis of <span
+    class="math inline">\(T_{\mathbf{\boldsymbol{\theta}}}\Theta\)</span>.
+    Here we are using the formalism where the tangent space is formed
+    out of the directional derivative operators. We may discuss this
+    point of view in another post. For <span
+    class="math inline">\(\Theta = \mathbb{R}^P\)</span> this
+    corresponds to the standard basis vectors in <span
+    class="math inline">\(T_{\mathbf{\boldsymbol{\theta}}} \Theta \cong
+    \mathbb{R}^P\)</span>.<a href="#fnref3" class="footnote-back"
     role="doc-backlink">↩︎</a></p></li>
     </ol>
     </section>

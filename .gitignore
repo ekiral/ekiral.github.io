@@ -5,7 +5,11 @@
 /blog/*.out
 /blog/*.bbl
 /blog/*.dvi
+/blog/*.fls
+/blog/*.fdb_latexmk
 
 *.DS_Store
 
 /blog/svg-inkscape
+
+
