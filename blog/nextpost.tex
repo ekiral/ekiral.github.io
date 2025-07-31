@@ -2,17 +2,22 @@
 \input{./preamble}
 
 
-\title{Loss as log-likelihood}
+\title{Learning Distributions on the Parameter Space}
 \author{emk}
 \begin{document}
 
 \maketitle
 
-Gıven a parametrized model, and a loss contribution $\ell_i(\vec{\theta)$
+We follow the notation of the \href{https://ekiral.github.io/blog/2025-06-05_notation.html}{setting} where we have a parametrized model $f$ with parameter space $\Theta$. With training data, we construct a loss function $\ell(\vec{\theta})$ and a loss contribution $\ell_i(\vec{\theta})$ for each labeled data point $(\vec{x}_i, y_i) \in \mathcal{X} \times \mathcal{Y}$. 
 
-There is an interpretation of $\ell_i(\vec{\theta})$ as the negative log likelihood of observing  the label $y$ \emph{given} the input $\vec{x}$ and the parameter $\vec{\theta}$. This interpretation can make sense when the loss between $f(\vec{x}, \vec{\theta})$ and the true label $y$ is supposed to be a model of how the label data gets generated.  But we can still see the consequences of such an interpretation. So our assumption is 
+Classically people minimize the loss function and find\footnote{or at least give it the old college try} a $\vec{\theta}^* \in \Theta$ which then they use to generalize the predictions $f(\cdot, \vec{\theta}^*) : \mathcal{X} \to \mathcal{Y}$. This is usually done via gradient methods, which requires that $\Theta$ be not only a manifold, but also have a Riemannian structure, i.e. have an inner product structure 
+
+
+\subsection*{The likelihood interpretation}
+
+There is an interpretation of $\ell_i(\vec{\theta})$ as the negative log likelihood of observing  the label $y$ \emph{given} the input $\vec{x}$ and the parameter $\vec{\theta}$. This interpretation can make sense when the loss between $f(\vec{x}, \vec{\theta})$ and the true label $y$ is supposed to be a model of how the label data gets generated.  But regardless of  we can still see the consequences of such an interpretation. So our assumption is 
 \[
-	\ell(\theta) = -\log \Prob(y | \vec{x}, \vec{\theta}) = - \log \Prob(\vec{x}, y | \vec{\theta}) + \text{const.}
+	\ell_i(\theta) = -\log \Prob(y_i | \vec{x}_i, \vec{\theta}) = - \log \Prob(\vec{x}, y | \vec{\theta}) + \text{const.}
 \] 
 wrong.
 
