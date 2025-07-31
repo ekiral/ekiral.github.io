@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="emk" />
+  
+  
+  
+  <title>But what is a gradient?</title>
+  
+
+  
+  <!-- CSS -->
+    <link rel="stylesheet" href="math-blog.css" />
+  
+  <!-- MathJax (only if --mathjax flag is used) -->
+    <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']],
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '0.8em'
+    }
+  };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+  <!-- Analytics or other header includes -->
+  </head>
+
+<body>
+  <!-- Title -->
+    <header class="title-header">
+    <h1 class="title">But what is a gradient?</h1>
+  </header>
+  
+  <!-- Navigation -->
+  <nav class="post-nav">
+    <a href="../index.html">← Back to Homepage</a>
+        | <a href="blog-index.html">← Back to Blog Index</a>
+      </nav>
+
+  <!-- Main content -->
+  <main>
+    <p>The differential of a loss function <span
+    class="math inline">\(\,\mathrm{d}\ell(\mathbf{\boldsymbol{\theta}})\)</span>
+    is a row vector, and the gradient <span
+    class="math inline">\(\nabla\ell(\mathbf{\boldsymbol{\theta}})\)</span>
+    is its transpose, a column vector. But what does this all mean?</p>
+    <h2 class="unnumbered" id="vectors">Vectors</h2>
+    <p>A vector space <span class="math inline">\(V\)</span> over <span
+    class="math inline">\(\mathbb{R}\)</span> is a set of objects
+    (called vectors<a href="#fn1" class="footnote-ref" id="fnref1"
+    role="doc-noteref"><sup>1</sup></a>) with two operations called
+    addition and scalar multiplication.</p>
+    <p>This can be rather abstract: elements of <span
+    class="math inline">\(V\)</span> can be thought of as a column of
+    numbers (your usual column vectors), they can be a collection of
+    differential operators (it is fine as long as you can add two
+    differential operators and multiply by a scalar), or matrices
+    themselves are vectors, or they can be abstract tangent vectors
+    attached to a manifold at a point—which are technically defined as
+    directional derivative operators for smooth functions on the
+    manifold (this is one of many equivalent ways to define tangent
+    vectors on a manifold, and it is the best one).</p>
+    <p>As a concrete example take <span class="math inline">\(X\)</span>
+    any set and consider the collection of all real valued functions
+    <span class="math inline">\(f: X \to \mathbb{R}\)</span>. Then upon
+    pointwise addition we can define addition of functions, that is the
+    value of <span class="math inline">\(f + g\)</span> at a point <span
+    class="math inline">\(x\in X\)</span> is defined to be <span
+    class="math inline">\((f + g)(x) := f(x) + g(x)\)</span>, where on
+    the right hand side the addition is in real numbers. Similarly <span
+    class="math inline">\((cf)(x) := c(f(x))\)</span> is the scalar
+    multiplication. So functions form a vector space.</p>
+    <p>If the vector space is finite dimensional then there is a basis,
+    meaning an ordered collection of linearly independent vectors <span
+    class="math inline">\(e_1, e_2, \ldots, e_n\)</span> such that any
+    <span class="math inline">\(v \in V\)</span> can be written uniquely
+    as a linear combination of these basis vectors. That is there are a
+    unique collection of real numbers <span class="math inline">\(c_1,
+    c_2, \ldots, c_n \in \mathbb{R}\)</span> such that <span
+    class="math inline">\(v = c_1 e_1 + c_2 e_2 + \cdots + c_n
+    e_n\)</span>. Every basis of <span class="math inline">\(V\)</span>
+    has the same number of vectors, which we then define to be the
+    dimension of <span class="math inline">\(V\)</span>, denoted as
+    <span class="math inline">\(\dim(V) = n\)</span>.</p>
+    <p>Given a basis of <span class="math inline">\(V\)</span> we can
+    represent a vector <span class="math inline">\(v\)</span> by a
+    (column) vector of real numbers <span
+    class="math display">\[\label{eq:ebasisrep}
+        v \leftrightsquigarrow \mathbf{\boldsymbol{v}} = \begin{bmatrix}
+    c_1\\ c_2\\ \vdots \\ c_n \end{bmatrix}\]</span> Although it is not
+    terribly standard I will be rigid and keep representing elements of
+    a vector space as a column vector. Row vectors will be reserved for
+    co-vectors also known as linear functionals or dual vectors (coming
+    soon to a subsection near you). The space of linear functionals is
+    also a vector space, so in that sense what constitutes a vector and
+    what constitutes a covector is not a mathematically justifiable
+    distinction. <em>If you take the linear functionals as your vector
+    space then yesterday’s covectors become today’s vectors and
+    yesterday’s vectors become today’s covectors.</em> Which we call a
+    vector and which we call a covector tells more about us, and which
+    object we consider to be more basic and which more derived (not in
+    the sense of derivatives).</p>
+    <p>Also although this is not standard notation either it might be
+    wise to distinguish between the vector <span
+    class="math inline">\(v\in V\)</span> and its presentation as a
+    column vector <span class="math inline">\(\mathbf{\boldsymbol{v}}
+    \in \mathbb{R}^n\)</span> by using the bold notation with the same
+    letter.</p>
+    <p>If one changes to another basis <span class="math inline">\(f_1,
+    \ldots, f_n\)</span> then the same vector can now be written as
+    <span class="math inline">\(v = d_1f_1 + \cdots + d_n f_n\)</span>
+    where <span class="math inline">\(d_1, \ldots, d_n \in
+    \mathbb{R}\)</span> are now new numbers. Then the
+    vertical-box-of-numbers representation of the vector changes <span
+    class="math display">\[\label{eq:fbasisrep}
+        v \leftrightsquigarrow \mathbf{\boldsymbol{v}}
+    =  \begin{bmatrix} d_1\\ d_2\\ \vdots \\ d_n \end{bmatrix}\]</span>
+    Because of this, perhaps, if we were being really strict then one
+    should have written down the basis dependence in the column vectors
+    as <span
+    class="math display">\[[\mathbf{\boldsymbol{v}}]_{\mathcal{B}_1} =
+    \begin{bmatrix} c_1\\ c_2\\ \vdots\\ c_n
+    \end{bmatrix}_{\mathcal{B}_1}
+    \qquad   [\mathbf{\boldsymbol{v}}]_{\mathcal{B}_2} = \begin{bmatrix}
+    d_1\\ d_2\\ \vdots\\ d_n \end{bmatrix}_{\mathcal{B}_2}\]</span>
+    where we call the bases as <span class="math inline">\(\mathcal{B}_1
+    = \{e_1, \ldots, e_n\}\)</span> and <span
+    class="math inline">\(\mathcal{B}_2 = \{f_1, \ldots, f_n\}\)</span>
+    . People usually don’t do such a thing though, but if there are
+    multiple legitimate bases lying around it might be smart to keep
+    track of the basis dependence.</p>
+    <div class="remark">
+    <p><strong>Remark 1</strong>. <em>If there is a slight unease by
+    seeing two different things for the same vector, think the same
+    differential operator perhaps, or the same tangent arrow stuck to
+    the side of a manifold. It is harder to think of distinct
+    presentations of a vector if one’s conception of a vector begins and
+    ends with a vertical box of numbers. But only makes sense if vectors
+    are conceived simply and abstractly as elements of some set where
+    you can add the elements and multiply the elements with a real
+    number, whatever add and multiply mean as long as said addition and
+    multiplication satisfy some axioms. In short, vectors are simply
+    elements of a vector space. And we can have many distinct ways of
+    naming it, a vector by any other name would point in the same
+    direction (à l<span>a</span> Shakespeare).</em></p>
+    </div>
+    <p>Can we calculate how the different column vector presentations
+    (the <span class="math inline">\(c\)</span>’s and the <span
+    class="math inline">\(d\)</span>’s) are related? Yes. The idea is to
+    write one set of basis elements in terms of the other. Precisely
+    speaking, write <span class="math display">\[f_j
+    \stackrel{\mathcal{B}_1}{\leftrightsquigarrow}
+    [\mathbf{\boldsymbol{f_j}}]_{\mathcal{B}_1} = \begin{bmatrix} a_{1j}
+    \\ a_{2j} \\ \vdots\\ a_{nj} \end{bmatrix}_{\mathcal{B}_1},\]</span>
+    meaning <span class="math inline">\(f_j = a_{1j} e_1 + \cdots +
+    a_{nj} e_n\)</span> for certain <span class="math inline">\(a_{ij}
+    \in \mathbb{R}\)</span>. Then creating a matrix (a box of numbers)
+    <span class="math inline">\(A\)</span> such that the <span
+    class="math inline">\(j\)</span>-th column of said box are the
+    numbers coming from <span class="math inline">\(f_j\)</span> above,
+    then we have the relationship <span
+    class="math display">\[\label{eq:changeOfBasis}
+        \begin{bmatrix} c_1\\ c_2\\ \vdots \\ c_n \end{bmatrix} =
+    \begin{bmatrix} a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} \\
+    a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n}\\
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+    a_{n1} &amp; a_{n2} &amp; \cdots  &amp; a_{nn} \end{bmatrix}
+    \begin{bmatrix} d_1 \\ d_2\\ \vdots \\d_n \end{bmatrix}\]</span> Or
+    in other words <span
+    class="math inline">\([\mathbf{\boldsymbol{v}}]_{\mathcal{B}_1} = A
+    [\mathbf{\boldsymbol{v}}]_{\mathcal{B}_2}\)</span>. This is how you
+    connect the two presentations. How to remember which side is which?
+    I always forget. One mnemonic is to consider the following, in basis
+    <span class="math inline">\(\mathcal{B}_2\)</span> the vector <span
+    class="math inline">\(v=f_1\)</span> would be represented by the
+    standard unit vector <span class="math inline">\(\begin{bmatrix} 1
+    &amp; 0 &amp; 0 &amp; \ldots &amp; 0 \end{bmatrix}^\top \in
+    \mathbb{R}^n\)</span> and if this is taken as the <span
+    class="math inline">\(d\)</span>’s on the right hand side of <a
+    href="#eq:changeOfBasis" data-reference-type="eqref"
+    data-reference="eq:changeOfBasis">[eq:changeOfBasis]</a> the
+    multiplication picks up the first column of the matrix which is
+    indeed the representation of <span
+    class="math inline">\(f_1\)</span> in the basis <span
+    class="math inline">\(\mathcal{B}_1\)</span>. Similarly for all the
+    other standard unit vectors in <span
+    class="math inline">\(\mathbb{R}^n\)</span>.</p>
+    <h2 class="unnumbered" id="linear-maps">Linear Maps</h2>
+    <p>A linear map <span class="math inline">\(A:V \to W\)</span> is a
+    function which respects the additive and the scalar multiplication
+    structures on the vector spaces. The image of a vector <span
+    class="math inline">\(v\in V\)</span> under the function <span
+    class="math inline">\(A\)</span> is usually denoted by <span
+    class="math inline">\(Av\)</span> unlike the customary <span
+    class="math inline">\(A(v)\)</span> for functions, though both are
+    acceptable.</p>
+    <p>Linear functions (equivalently maps, or transformations<a
+    href="#fn2" class="footnote-ref" id="fnref2"
+    role="doc-noteref"><sup>2</sup></a>) satisfy <span
+    class="math display">\[\begin{aligned}
+        A(v + w) &amp;= Av + Aw \qquad \text{ for all } v, w \in V\\
+        A(cv) &amp;= c (Av) \qquad \text{ for all } v \in V \text{ and }
+    c \in \mathbb{R}.
+    \end{aligned}\]</span> Note that in the first line the addition on
+    the left hand side is the addition in <span
+    class="math inline">\(V\)</span> and on the right hand side it is
+    the addition in <span class="math inline">\(W\)</span> as <span
+    class="math inline">\(Av, Aw \in W\)</span>. Same for the scalar
+    multiplication.</p>
+    <p>If one chooses a basis <span class="math inline">\(\mathcal{B}_1
+    = \{e_1, \ldots, e_n\}\subset V\)</span> in the domain and another
+    basis <span class="math inline">\(\mathcal{B}_2 = \{f_1, \ldots,
+    f_m\} \subset W\)</span> in the range (I still use the <span
+    class="math inline">\(e\)</span>’s and <span
+    class="math inline">\(f\)</span>’s but they have different meaning
+    now, they’re bases of distinct vector spaces) then we can express
+    the relationship between <span class="math inline">\(v \in
+    V\)</span> written as a column vector <span
+    class="math inline">\([\mathbf{\boldsymbol{v}}]_{\mathcal{B}_1}\)</span>
+    and the vector <span class="math inline">\(w = Av \in W\)</span>
+    written as a column vector <span
+    class="math inline">\([\mathbf{\boldsymbol{w}}]_{\mathcal{B}_2}\)</span>
+    using matrices.</p>
+    <p>The coefficients of this matrix are given as <span
+    class="math display">\[a_{ij} = \langle
+    [\mathbf{\boldsymbol{f_i}}]_{\mathcal{B}_2}, [\mathbf{\boldsymbol{A
+    e_j}}]_{\mathcal{B}_2} \rangle.\]</span> Then constructing the box
+    of numbers <span class="math inline">\(A = [a_{ij}]_{i\in 1, \ldots,
+    m; j = 1, \ldots, n}\)</span>, i.e. a matrix, we get <span
+    class="math inline">\(\mathbf{\boldsymbol{w}} = A
+    \mathbf{\boldsymbol{v}}\)</span>. Using the same letter <span
+    class="math inline">\(A\)</span> for the linear map and the box of
+    numbers is an abuse of notation, but it is customary. And what one
+    needs to remember is that in writing a linear map as a matrix one
+    assumes a choice of basis for <span class="math inline">\(V\)</span>
+    <em>and</em> a choice of basis for <span
+    class="math inline">\(W\)</span>.</p>
+    <p>Here what we mean by the inner product is the dot product you
+    know and love of column vectors (written with respect to the <span
+    class="math inline">\(\mathcal{B}_2\)</span> basis). This may seem
+    obvious (as many other things in this note).</p>
+    <h2 class="unnumbered" id="linear-functionals">Linear
+    Functionals</h2>
+    <p>Linear functionals are linear maps from a vector space <span
+    class="math inline">\(V\)</span> to the one dimensional vector space
+    <span class="math inline">\(\mathbb{R}\)</span>. The space of linear
+    maps between two vector spaces form a vector space where addition is
+    considered pointwise. Therefore linear functionals on a vector space
+    <span class="math inline">\(V\)</span> is also a vector space and it
+    is denoted by one of <span class="math inline">\(V^*,
+    V&#39;\)</span>, or the my personal favorite <span
+    class="math inline">\(V^\vee\)</span>.</p>
+    <p>Linear functionals are also called
+    <span><strong>covectors</strong></span>, in a sense they are
+    <span><strong>co</strong></span>mpanion to vectors. Given a <span
+    class="math inline">\(\lambda \in V^\vee\)</span> (it is common to
+    use small Greek letters for linear functionals) and <span
+    class="math inline">\(v \in V\)</span> <span
+    class="math display">\[\label{eq:pairing}
+        \lambda(v) \in \mathbb{R}\text{ is also denoted by } \langle
+    \lambda, v \rangle.\]</span> This is not an inner product it is
+    simply the pairing given by the evaluation of the linear functional
+    <span class="math inline">\(\lambda\)</span> at the vector <span
+    class="math inline">\(v\)</span>. But it uses the same notation as
+    an inner product. The reason one would prefer this abuse of a
+    notation is that if one had an inner product <span
+    class="math inline">\(\langle \cdot, \cdot \rangle\)</span> then
+    every vector <span class="math inline">\(w\in V\)</span> would
+    define a linear functional by <span class="math inline">\(\lambda_w
+    : v \mapsto \langle w, v \rangle\)</span>. In a finite dimensional
+    space if simply chooses a non-degenerate inner product, then in fact
+    every <span class="math inline">\(\lambda \in V^\vee\)</span> is of
+    the form <span class="math inline">\(\lambda = \lambda_w\)</span>
+    defined above, for some vector <span class="math inline">\(w \in
+    V\)</span>. In infinite dimensional Hilbert spaces this holds too,
+    but only for <em>continuous</em> linear functionals (the continuous
+    dual mentioned above). This is called the Riesz representation
+    theorem.</p>
+    <p>The brackets in <a href="#eq:pairing" data-reference-type="eqref"
+    data-reference="eq:pairing">[eq:pairing]</a> is simply evaluating
+    the linear functional at the vector, and is called a
+    <span><strong>pairing</strong></span>. Although equivalent, using a
+    pairing <span class="math inline">\(\langle \cdot, \cdot \rangle :
+    V^\vee \times V \to \mathbb{R}\)</span> is preferable to using an
+    inner product <span class="math inline">\(\langle\cdot, \cdot
+    \rangle : V \times V \to \mathbb{R}\)</span> (imho) because a
+    pairing doesn’t make an implicit choice of an inner product. It lets
+    us be very explicit when the time comes to make that choice.</p>
+    <p>Given a vector space <span class="math inline">\(V\)</span> and a
+    basis <span class="math inline">\(\mathcal{B} = \{e_1, \ldots,
+    e_n\}\)</span> we have a dual basis <span
+    class="math inline">\(\mathcal{B}^\vee = \{\delta_1, \ldots,
+    \delta_n\}\)</span> of <span class="math inline">\(V^\vee\)</span>
+    where the dual basis vectors satisfy <span
+    class="math display">\[\langle \delta_j, e_i \rangle = \begin{cases}
+    0 &amp; \text{ if } i \neq j, \\
+        1 &amp;\text{ if }  i = j, \end{cases}\]</span></p>
+    <p>In matrix notation covectors are represented by <span
+    class="math inline">\(n\times 1\)</span> matrices, i.e. row vectors.
+    so we have <span
+    class="math display">\[\lambda  \leftrightsquigarrow \begin{bmatrix}
+    y_1 &amp; y_2 &amp; \cdots &amp; y_n \end{bmatrix} \quad \text{ if }
+    \quad \lambda = y_1 \delta_1 + y_2 \delta_2 + \cdots + y_n \delta_n
+    \in V^\vee.\]</span> But of course if we think of <span
+    class="math inline">\(V^\vee\)</span> as a vector space itself, with
+    basis <span class="math inline">\(\{\delta_1, \delta_1, \ldots,
+    \delta_n\}\)</span> then we should have represented <span
+    class="math inline">\(\lambda\)</span> in vector notation as a
+    column vector <span class="math display">\[[\lambda]_{\mathcal{B}} =
+    \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_n
+    \end{bmatrix}.\]</span></p>
+    <p>If things are confusing to you at this point, they are only
+    confusing because they are simple. Many things overlap, and one has
+    to carefully peel of the different layers of meaning that are on top
+    of another like the pile of coats on top of your bed at a large
+    family gathering.</p>
+    <p>Also insisting on presenting a covector horizontally
+    vs. vertically is a personal choice, and it is impossible to insist
+    on this consistently since covectors are also vectors in the
+    end.</p>
+    <h2 class="unnumbered" id="derivatives-as-linear-maps">Derivatives
+    as linear maps</h2>
+    <p>Let <span class="math inline">\(M\)</span> and <span
+    class="math inline">\(N\)</span> be two manifolds. Then consider a
+    differentiable map <span class="math inline">\(f: M\to N\)</span>.
+    The definition of a derivative (equivalently differential) of <span
+    class="math inline">\(f\)</span> at a point is <em>the best linear
+    approximation</em> to the function at that point. What do we mean by
+    it? If <span class="math inline">\(M\)</span> is an open subset in
+    <span class="math inline">\(\mathbb{R}^n\)</span> and the manifold
+    <span class="math inline">\(N\)</span> is an open subset in <span
+    class="math inline">\(\mathbb{R}^n\)</span> then we look at <span
+    class="math display">\[\label{eq:derivativeDifference}
+        \operatorname{Diff}(h,t) := f(\mathbf{\boldsymbol{x}} + t
+    \mathbf{\boldsymbol{h}}) - f(\mathbf{\boldsymbol{x}}) -
+    tA\mathbf{\boldsymbol{h}}\]</span> for all <span
+    class="math inline">\(\mathbf{\boldsymbol{h}}\in
+    \mathbb{R}^n\)</span> and small enough <span
+    class="math inline">\(t\in \mathbb{R}\)</span> such that <span
+    class="math inline">\(\mathbf{\boldsymbol{x}} +
+    t\mathbf{\boldsymbol{h}}\in M\)</span> so <span
+    class="math inline">\(f\)</span>-ing it still makes sense. Here
+    <span class="math inline">\(A: \mathbb{R}^n \to
+    \mathbb{R}^m\)</span> is a linear map.</p>
+    <p>If <span class="math inline">\(f\)</span> is differentiable at
+    <span class="math inline">\(\mathbf{\boldsymbol{x}}\)</span> then
+    <span class="math inline">\(\operatorname{Diff}(h,t) = o(t)\)</span>
+    as <span class="math inline">\(t\to 0\)</span> for all <span
+    class="math inline">\(\mathbf{\boldsymbol{h}} \in
+    \mathbb{R}^n\)</span> for one linear map <span
+    class="math inline">\(A\)</span> and for one <span
+    class="math inline">\(A\)</span> only. In other words there is only
+    one linear map which captures the first Taylor approximation of
+    <span class="math inline">\(f\)</span>.</p>
+    <p>Such an <span class="math inline">\(A\)</span>—if it exists—is
+    called the first derivative (or differential) of <span
+    class="math inline">\(f\)</span> at <span
+    class="math inline">\(\mathbf{\boldsymbol{x}}\)</span>. It is
+    denoted by one of the many symbols <span
+    class="math display">\[\,\mathrm{d}f_p, \,\mathrm{d}f\big|_p,
+    \,\mathrm{d}f(p), Df(p), Df\big|_p, \partial f(p) .\]</span></p>
+    <p>For general manifolds the derivative at a point <span
+    class="math inline">\(p \in M\)</span> is a linear map <span
+    class="math inline">\(\,\mathrm{d}f_p : T_p M \to T_p N\)</span>.
+    The argument is essentially the same since the notions of derivative
+    or tangent vector on manifolds are all defined by pulling them back
+    to the <span class="math inline">\(\mathbb{R}^n,
+    \mathbb{R}^m\)</span> case by using their charts. So everything is
+    defined by coordinate charts, which are defined on open subsets of
+    Euclidean space. So no real generality was lost in our understanding
+    in considering the case of open subsets of <span
+    class="math inline">\(\mathbb{R}^n, \mathbb{R}^m\)</span>.</p>
+    <p>There is a historical reason for calling differential vs. a
+    derivative. But that doesn’t matter. They are basically the same
+    thing.</p>
+    <p>The gradient, however, is another beast. The gradient is a vector
+    in <span class="math inline">\(T_pM\)</span>, it is not a covector.
+    In order to get a vector that from a covector (for functions <span
+    class="math inline">\(f: M\to N\)</span> with <span
+    class="math inline">\(N \subset \mathbb{R}\)</span> the derivative
+    is a cotangent vector) we need an inner product. That is for the
+    next section.</p>
+    <p>Let us instead cap off this section by what would these covectors
+    look like on a manifold if one chose a basis. First we choose a
+    basis of vectors in the tangent space <span
+    class="math inline">\(T_p M\)</span>. Let us call it <span
+    class="math inline">\(\mathcal{B} = \{h_1, \ldots, h_m\} \in
+    T_pM\)</span>. Given an <span class="math inline">\(f : M \to
+    \mathbb{R}\)</span> the differential can be written as the row
+    vector <span class="math display">\[\,\mathrm{d}f_p
+    \leftrightsquigarrow  \begin{bmatrix} \,\mathrm{d}f_p[h_1] &amp;
+    \,\mathrm{d}f_p[h_2]&amp; \cdots &amp; \,\mathrm{d}f_p[h_m]
+    \end{bmatrix}\]</span> using the dual basis to <span
+    class="math inline">\(\mathcal{B}\)</span>. The quantities <span
+    class="math inline">\(\,\mathrm{d}f_p[h_i]\)</span> are numbers so
+    it all fits. These numbers are the directional derivative of <span
+    class="math inline">\(f\)</span> in the direction of <span
+    class="math inline">\(h_i\)</span>. The directional derivative of
+    <span class="math inline">\(f\)</span> at <span
+    class="math inline">\(p\)</span> in the direction of <span
+    class="math inline">\(h\in T_pM\)</span> can be computed using any
+    smooth path <span class="math inline">\(\gamma\)</span> passing
+    through <span class="math inline">\(p\)</span> in the direction of
+    <span class="math inline">\(h\)</span>, that is <span
+    class="math inline">\(\gamma: (-1,1) \to M\)</span>, <span
+    class="math inline">\(\gamma(0) = 1\)</span> and <span
+    class="math inline">\(\gamma&#39;(0) =h \in T_pM\)</span>. Then
+    <span class="math inline">\(f \circ \gamma: (-1,1) \to
+    \mathbb{R}\)</span> and we can take the standard 1-dimensional
+    derivative <span class="math inline">\((f \circ \gamma)&#39;(0) \in
+    \mathbb{R}\)</span>. That derivative, that number, is the
+    directional derivative <span class="math inline">\(\,\mathrm{d}f_p
+    [h] \in \mathbb{R}\)</span> (which is independent of the choice of
+    <span class="math inline">\(\gamma\)</span> as long as <span
+    class="math inline">\(\gamma(0) = p\)</span> and <span
+    class="math inline">\(\gamma&#39;(0) = h\)</span>).</p>
+    <p>So to reiterate, if <span
+    class="math inline">\([\mathbf{\boldsymbol{h}}]_{\mathcal{B}} =
+    \begin{bmatrix} c_1 &amp; c_2 &amp; \cdots &amp; c_n
+    \end{bmatrix}^\top\)</span> is the vector representation of the
+    tangent vector <span class="math inline">\(h \in T_pM\)</span> in
+    the basis <span class="math inline">\(\mathcal{B}\)</span> (to
+    reiterate once again this means <span class="math inline">\(h = c_1
+    h_1 + c_2 h_2 + \cdots + c_m h_m\)</span>) then the directional
+    derivative of a function <span class="math inline">\(f : M \to
+    \mathbb{R}\)</span> in the direction of <span
+    class="math inline">\(h\)</span> can be computed as <span
+    class="math display">\[\begin{aligned}
+        \,\mathrm{d}f_p [h] &amp;= [\,\mathrm{d}f_p]_{\mathcal{B}^\vee}
+    [\mathbf{\boldsymbol{h}}]_{\mathcal{B}}
+    =  \begin{bmatrix}\,\mathrm{d}f_p[h_1] &amp;
+    \,\mathrm{d}f_p[h_2]&amp; \cdots &amp;
+    \,\mathrm{d}f_p[h_m]  \end{bmatrix} \begin{bmatrix}
+        c_1 \\ c_2 \\ \vdots \\ c_m
+        \end{bmatrix} \\
+        &amp;= c_1 \,\mathrm{d}f_p[h_1] + c_2 \,\mathrm{d}f_p[h_2] +
+    \cdots  + c_m \,\mathrm{d}f_p[h_m]
+    \end{aligned}\]</span></p>
+    <h2 id="bilinear-forms-inner-products-i.e.-metrics">Bilinear forms,
+    Inner Products (i.e. metrics)</h2>
+    <p>A <span><strong>bilinear form</strong></span> on a vector space
+    <span class="math inline">\(V\)</span> is a function <span
+    class="math display">\[\omega : V \times V \to \mathbb{R}\]</span>
+    satisfying linearity in both variables, staying true to its name,
+    i.e. <span class="math display">\[\begin{aligned}
+        &amp;&amp; \omega(v_1 + v_2, w) = \omega(v_1, w) + \omega(v_2,
+    w) &amp;&amp; \omega(cv, w) = c\omega(v,w)\\
+        &amp;&amp; \omega(v, w_1 + w_2) = \omega(v, w_1) + \omega(v,
+    \omega_2) &amp;&amp; \omega(v, cw) = c\omega(v,w)
+    \end{aligned}\]</span> for all <span class="math inline">\(v,v_1,
+    v_2, w, w_1, w_2 \in V\)</span> and for all <span
+    class="math inline">\(c \in \mathbb{R}\)</span>.</p>
+    <p>A bilinear form is symmetric if <span
+    class="math inline">\(\omega(v,w) = \omega(w.v)\)</span>, and is
+    called non-degenerate if <span class="math inline">\(\omega(v,w) =
+    0\)</span> for all <span class="math inline">\(w \in V\)</span>
+    implies <span class="math inline">\(v = 0\)</span>.</p>
+    <p>An <span><strong>inner product</strong></span> satisfies
+    <em>positive definite</em>ness property which is stronger than
+    nondegeneracy, meaning that <span
+    class="math inline">\(\omega(v,v)&gt;0\)</span> for every nonzero
+    vector <span class="math inline">\(v \in V\)</span>. An inner
+    product is also sometimes called a metric, but usually the term
+    (Riemannian) metric is reserved for a manifold. A Riemannian metric
+    on a manifold <span class="math inline">\(M\)</span> is a choice of
+    inner product <span class="math inline">\(\omega_p\)</span> on the
+    vector space <span class="math inline">\(T_p M\)</span> for every
+    <span class="math inline">\(p \in M\)</span> and these metrics need
+    to be smooth as one varies the <span
+    class="math inline">\(p\)</span>.</p>
+    <div class="remark">
+    <p><strong>Remark 2</strong>. <em>Just the word metric, without the
+    Riemannian qualifier, is something quite different. It refers to an
+    abstract distance function <span class="math inline">\(d\)</span> on
+    any set <span class="math inline">\(X\)</span>, satisfying a handful
+    of properties like the triangle inequality.</em></p>
+    </div>
+    <p>A bilinear form on a finite dimensional space can be represented
+    by a matrix as follows. Given a basis <span
+    class="math inline">\(\mathcal{B} = \{e_1, e_2, \ldots,
+    e_n\}\)</span> of <span class="math inline">\(V\)</span> we look at
+    the Gram-matrix <span class="math inline">\(F = F_\omega\)</span>
+    where the <span class="math inline">\(ij\)</span>-th entry is <span
+    class="math inline">\(\omega(e_i, e_j) = F_{ij}\)</span> then <span
+    class="math display">\[\omega(v,w) = \mathbf{\boldsymbol{v}}^\top F
+    \mathbf{\boldsymbol{w}}\]</span> (recall <span
+    class="math inline">\(\mathbf{\boldsymbol{v}} =
+    [\mathbf{\boldsymbol{v}}]_{\mathcal{B}}\)</span> and <span
+    class="math inline">\(\mathbf{\boldsymbol{w}} =
+    [\mathbf{\boldsymbol{w}}]_{\mathcal{B}}\)</span>).</p>
+    <p>If <span class="math inline">\(\omega\)</span> is symmetric
+    meaning if <span class="math inline">\(\omega(v,w) =
+    \omega(w,v)\)</span>, then <span class="math inline">\(F\)</span> is
+    symmetric as a matrix. If <span
+    class="math inline">\(\omega\)</span> is nondegenerate then <span
+    class="math inline">\(F\)</span> has full rank, i.e. invertible.</p>
+    <div class="remark">
+    <p><strong>Remark 3</strong>. <em>There is a quite important
+    distinction between this matrix <span
+    class="math inline">\(F\)</span> representing a bilinear form, and
+    considering matrix as a linear map. It is not just a philosophical
+    distinction.</em></p>
+    <p><em>If you change the basis of <span
+    class="math inline">\(V\)</span> to <span
+    class="math inline">\(\mathcal{B}&#39; = \{f_1, \ldots,
+    f_k\}\)</span> then the bilinear form in the new basis can be
+    represented by the matrix <span class="math display">\[P^\top F
+    P\]</span> where <span class="math inline">\(P\)</span> is the
+    change of basis matrix (with columns as <span
+    class="math inline">\([\mathbf{\boldsymbol{f_i}}]_\mathcal{B}\)</span>).
+    Indeed <span class="math inline">\(\omega(v,w) =
+    [\mathbf{\boldsymbol{v}}]_{\mathcal{B}}^\top F
+    [\mathbf{\boldsymbol{w}}]_{\mathcal{B} } =
+    (P[\mathbf{\boldsymbol{v}}]_{\mathcal{B}&#39;})^\top F
+    (P[\mathbf{\boldsymbol{w}}]_{\mathcal{B}&#39;}) =
+    [\mathbf{\boldsymbol{v}}]_{\mathcal{B}&#39;}^\top (P^\top F P)
+    [\mathbf{\boldsymbol{w}}]_{\mathcal{B}&#39; }\)</span>. So the same
+    bilinear form, when considered with respect to the basis <span
+    class="math inline">\(\mathcal{B}&#39;\)</span> would be given by
+    the matrix <span class="math inline">\(P^\top FP\)</span>.</em></p>
+    <p><em>However if <span class="math inline">\(F\)</span> is
+    considered as a linear map, the same linear map after a change of
+    basis to <span class="math inline">\(\mathcal{B}&#39;\)</span> would
+    be written with the matrix <span class="math display">\[P^{-1}F
+    P.\]</span> We would only have <span class="math inline">\(P^{-1}=
+    P^\top\)</span> for orthogonal change of bases.</em></p>
+    </div>
+    <p>Even though the matrix of a bilinear form is not a linear map,
+    one can naturally create a linear map <span
+    class="math inline">\(\flat : V \to V^\vee\)</span> out of a
+    bilinear form making use of the fact that for every <span
+    class="math inline">\(v \in V\)</span> the function <span
+    class="math inline">\(\omega(\cdot, v) \in V^\vee\)</span> and that
+    this correspondence is linear in <span
+    class="math inline">\(v\)</span>. In coordinates: <span
+    class="math display">\[\begin{aligned}
+        \flat : V &amp; \longrightarrow V^\vee\\
+         \mathbf{\boldsymbol{v}}&amp; \longmapsto
+    (F\mathbf{\boldsymbol{v}})^\top.
+    \end{aligned}\]</span> the inverse of which (which exists if <span
+    class="math inline">\(\omega\)</span> is nondegenerate) is given in
+    coordinates by <span class="math display">\[\begin{aligned}
+        \sharp : V^\vee &amp;\longrightarrow V\\
+        \mathbf{\boldsymbol{\xi}} &amp;\longmapsto
+    F^{-1}\mathbf{\boldsymbol{\xi}}^\top.
+    \end{aligned}\]</span> Here we took <span
+    class="math inline">\(\xi\)</span> as a row vector to begin
+    with.</p>
+    <p>So let us keep in mind that, <span
+    class="math inline">\(V\)</span> and <span
+    class="math inline">\(V^\vee\)</span> can be identified, but there
+    are many ways to connect them. And identifying <span
+    class="math inline">\(V\)</span> with <span
+    class="math inline">\(V^\vee\)</span> as vector spaces (using a
+    linear map <span class="math inline">\(A :  V \to V^\vee\)</span>)
+    amounts to a choice of metric (which uses the same matrix but in a
+    bilinear form fashion).</p>
+    <p>However we have a canonical matching <span
+    class="math inline">\((V^\vee)^\vee \cong V\)</span>, without any
+    choice of metric. <span class="math inline">\((V^\vee)^\vee\)</span>
+    is called the <span><strong>double dual</strong></span>. One simply
+    associates a vector <span class="math inline">\(v \in V\)</span> to
+    the linear functional <span
+    class="math inline">\(\operatorname{ev}_v: V^\vee \to
+    \mathbb{R}\)</span> eating linear functionals on <span
+    class="math inline">\(V\)</span>. The value of <span
+    class="math inline">\(\operatorname{ev}_v\)</span> on a linear
+    functional <span class="math inline">\(\lambda\)</span> is by
+    evaluation of <span class="math inline">\(\lambda\)</span> at <span
+    class="math inline">\(v\)</span>, in other words <span
+    class="math inline">\(\operatorname{ev}_v(\lambda) = \langle
+    \lambda, v\rangle\)</span>. Thus <span class="math inline">\(v
+    \mapsto \operatorname{ev}_v\)</span> goes from <span
+    class="math inline">\(V\)</span> to the double dual <span
+    class="math inline">\((V^\vee)^\vee\)</span>. And it is a linear
+    bijection for finite dimesional vector spaces.</p>
+    <h1 class="unnumbered" id="gradients...-finally">Gradients...
+    Finally!</h1>
+    <p>So a loss function <span class="math inline">\(\ell\)</span> is a
+    function from the parameter manifold <span
+    class="math inline">\(\Theta\)</span> to the reals. Specialize to
+    the case <span class="math inline">\(\Theta = \mathbb{R}^P\)</span>
+    for convenience. The tangent space at a point <span
+    class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span> is also
+    congruent to <span class="math inline">\(\mathbb{R}^P\)</span> and
+    we can choose the standard coordinate basis. The derivative of <span
+    class="math inline">\(\ell\)</span> at <span
+    class="math inline">\(\mathbf{\boldsymbol{\theta}} \in
+    \mathbb{R}^P\)</span> is a cotangent vector <span
+    class="math display">\[d\ell_{\mathbf{\boldsymbol{\theta}}} \in
+    T_{\mathbf{\boldsymbol{\theta}}}^*\Theta\]</span> i.e. a covector of
+    the tangent space <span
+    class="math inline">\(T_{\mathbf{\boldsymbol{\theta}}}\Theta\)</span>
+    of the parameter manifold at the point <span
+    class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span>. Given
+    in the standard dual basis as a row-vector <span
+    class="math display">\[[d\ell_{\mathbf{\boldsymbol{\theta}}}]  =
+    \begin{bmatrix}
+        \partial_1 \ell (\mathbf{\boldsymbol{\theta}}) &amp; \cdots
+    &amp; \partial_P \ell(\mathbf{\boldsymbol{\theta}})
+        \end{bmatrix}\]</span> where <span
+    class="math inline">\(\partial_i= \frac{\partial}{\partial
+    \theta_i}\)</span> is shorthand for the partial derivative with
+    respect to the <span class="math inline">\(i\)</span><sup>th</sup>
+    coordinate.</p>
+    <p>The parameter manifold is a Riemannian manifold, each tangent
+    space is congruent to <span
+    class="math inline">\(\mathbb{R}^P\)</span> with the standard
+    Euclidean inner product (i.e. dot product). The gram matrix <span
+    class="math inline">\(F\)</span> for this metric, with respect to
+    the standard coordinate basis, and the standard dual basis is simply
+    the identity matrix. In other words, the musical isomorphism <span
+    class="math inline">\(\sharp\)</span> giving us vectors from
+    covectors is simply the transpose.</p>
+    <p>The gradient is defined as <span
+    class="math inline">\(\nabla\ell(\mathbf{\boldsymbol{\theta}}) :=
+    \sharp (\,\mathrm{d}\ell_{\mathbf{\boldsymbol{\theta}}})\)</span>
+    and so, in standard coordinate basis it is given as <span
+    class="math display">\[[\nabla \ell (\mathbf{\boldsymbol{\theta}}) ]
+    = [\,\mathrm{d}\ell_{\mathbf{\boldsymbol{\theta}}}]^\top
+    =  \begin{bmatrix}
+        \partial_1 \ell(\mathbf{\boldsymbol{\theta}}) \\
+        \vdots\\
+        \partial_P \ell(\mathbf{\boldsymbol{\theta}})
+        \end{bmatrix}.\]</span> This is the gradient. When the basis is
+    understood, we will drop the brackets.</p>
+    <p>After all is said and done, we’re back to what we knew.</p>
+    <p>Much ado about nothing!</p>
+    <p>Just kidding, I think we are can now stand taller after our
+    journey to <em>abstractmathland</em> and back again.</p>
+    <section id="footnotes" class="footnotes footnotes-end-of-document"
+    role="doc-endnotes">
+    <hr />
+    <ol>
+    <li id="fn1"><p>This is rather funny and such a mathematician move;
+    one defines a vector as an element of a vector space, and not the
+    other way around. Normal people define things by their constituents.
+    A vector by itself, not belonging to any vector space is no
+    vector.<a href="#fnref1" class="footnote-back"
+    role="doc-backlink">↩︎</a></p></li>
+    <li id="fn2"><p>Functions are the most fundamental concept in
+    mathematics and fittingly has many names that reflect many of the
+    nuances of the ways they may appear to us, we can call them maps, or
+    transformations, operators; and morphisms as well. Ultimately they
+    are all functions, i.e. <span class="math inline">\(f : X \to
+    Y\)</span> is a function that connects every element <span
+    class="math inline">\(x \in X\)</span> to a unique element <span
+    class="math inline">\(y \in Y\)</span>.</p>
+    <p>If we think of <span class="math inline">\(x \&amp; y\)</span> as
+    quantities that relate to one another through some formula we simply
+    use the word <em>function</em>, if there is some geometric intuition
+    we can call them <em>maps</em> or <em>mappings</em> (or
+    <em>charts</em> as in the case of patches of a manifold), if the
+    domain and range of the function are the same and the context is
+    geometric then the word <em>transformation</em> is apt to give us
+    the intuition of transforming (stretching and skewing rotating etc.)
+    the input. Operators operate linearly on inputs.</p>
+    <p>Ultimately they are all functions, and nothing more than
+    functions, so the namings are just psychology. The word
+    <em>morphism</em> is a bit more than a function, it also implies
+    that there is some structure in both the domain and the range that
+    is being preserved, so linear maps (thinking of vectors as geometric
+    thus we use the word map, and linear is an adjective specifying a
+    property of the map) are also called as vector space homomorphisms,
+    if the map goes from the same vector space to itself then it is a
+    vector space endomorphism.</p>
+    <p>Some of these distinctions are personal, and not written in
+    stone. But I’m just giving you the vibes around this plethora of
+    words meaning essentially the same thing. And if one were to suck
+    all the life out of mathematical writing, one would just call all of
+    them <em>functions</em>.<a href="#fnref2" class="footnote-back"
+    role="doc-backlink">↩︎</a></p></li>
+    </ol>
+    </section>
+  </main>
+
+  <!-- Bottom navigation (optional) -->
+  <nav class="post-nav-bottom">
+        <a href="blog-index.html">← Back to Blog Index</a>
+      </nav>
+
+  <!-- Author and date at bottom -->
+  
+
+</body>
+</html>

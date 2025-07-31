@@ -1,0 +1,249 @@
+\documentclass[12pt]{amsart}
+\input{./preamble}
+
+
+
+\title{But what is a gradient?}
+\author{emk}
+\begin{document}
+
+\maketitle
+
+The differential of a loss function $\d \ell(\vec{\theta})$ is a row vector, and the gradient $\nabla\ell(\vec{\theta})$ is its transpose, a column vector. But what does this all mean?
+
+
+\subsection*{Vectors}
+A vector space $V$ over $\R$ is a set of objects (called vectors\footnote{This is rather funny and such a mathematician move; one defines a vector as an element of a vector space, and not the other way around. Normal people define things by their constituents. A vector by itself, not belonging to any vector space is no vector.}) with two operations called addition and scalar multiplication.
+
+This can be rather abstract: elements of $V$ can be thought of as a column of numbers (your usual column vectors), they can be a collection of differential operators (it is fine as long as you can add two differential operators and multiply by a scalar), or matrices themselves are vectors, or they can be abstract tangent vectors attached to a manifold at a point---which are technically defined as directional derivative operators for smooth functions on the manifold (this is one of many equivalent ways to define tangent vectors on a manifold, and it is the best one). 
+
+As a concrete example take $X$ any set and consider the collection of all real valued functions $f: X \to \R$. Then upon pointwise addition we can define addition of functions, that is the value of $f + g$ at a point $x\in X$ is defined to be $(f + g)(x) := f(x) + g(x)$, where on the right hand side the addition is in real numbers. Similarly $(cf)(x) := c(f(x))$ is the scalar multiplication. So functions form a vector space.
+
+If the vector space is finite dimensional then there is a basis, meaning an ordered collection of linearly independent vectors $e_1, e_2, \ldots, e_n$ such that any $v \in V$ can be written uniquely as a linear combination of these basis vectors. That is there are a unique collection of real numbers $c_1, c_2, \ldots, c_n \in \R$ such that $v = c_1 e_1 + c_2 e_2 + \cdots + c_n e_n$. Every basis of $V$ has the same number of vectors, which we then define to be the dimension of $V$, denoted as $\dim(V) = n$. 
+
+Given a basis of $V$ we can represent a vector $v$ by a (column) vector of real numbers
+\begin{equation}\label{eq:ebasisrep}
+	v \leftrightsquigarrow \vec{v} = \begin{bmatrix} c_1\\ c_2\\ \vdots \\ c_n \end{bmatrix}
+\end{equation}
+Although it is not terribly standard I will be rigid and keep representing elements of a vector space as a column vector. Row vectors will be reserved for co-vectors also known as linear functionals or dual vectors (coming soon to a subsection near you). The space of linear functionals is also a vector space, so in that sense what constitutes a vector and what constitutes a covector is not a mathematically justifiable distinction. \emph{If you take the linear functionals as your vector space then yesterday's covectors become today's vectors and yesterday's vectors become today's covectors.} Which we call a vector and which we call a covector tells more about us, and which object we consider to be more basic and which more derived (not in the sense of derivatives). 
+
+Also although this is not standard notation either it might be wise to distinguish between the vector $v\in V$ and its presentation as a column vector $\vec{v} \in \R^n$ by using the bold notation with the same letter. 
+
+If one changes to another basis  $f_1, \ldots, f_n$ then the same vector can now be written as $v = d_1f_1 + \cdots + d_n f_n$ where $d_1, \ldots, d_n \in \R$ are now new numbers. Then the vertical-box-of-numbers representation of the vector changes
+\begin{equation}\label{eq:fbasisrep}
+	v \leftrightsquigarrow \vec{v} =  \begin{bmatrix} d_1\\ d_2\\ \vdots \\ d_n \end{bmatrix}
+\end{equation}
+Because of this, perhaps, if we were being really strict then one should have written down the basis dependence in the column vectors as
+\[
+	[\vec{v}]_{\mathcal{B}_1} = \begin{bmatrix} c_1\\ c_2\\ \vdots\\ c_n \end{bmatrix}_{\mathcal{B}_1} \qquad 	[\vec{v}]_{\mathcal{B}_2} = \begin{bmatrix} d_1\\ d_2\\ \vdots\\ d_n \end{bmatrix}_{\mathcal{B}_2}
+\]
+where we call the bases as $\mathcal{B}_1 = \{e_1, \ldots, e_n\}$ and $\mathcal{B}_2 = \{f_1, \ldots, f_n\}$ . People usually don't do such a thing though, but if there are multiple legitimate bases lying around it might be smart to keep track of the basis dependence.
+\begin{remark}
+If there is a slight unease by seeing two different things for the same vector,  think the same differential operator perhaps, or the same tangent arrow stuck to the side of a manifold. It is harder to think of distinct presentations of a vector if one's conception of a vector begins and ends with a vertical box of numbers. But only makes sense if vectors are conceived simply and abstractly as elements of some set where you can add the elements and multiply the elements with a real number, whatever add and multiply mean as long as said addition and multiplication satisfy some axioms. In short, vectors are simply elements of a vector space. And we can have many distinct ways of naming it, a vector by any other name would point in the same direction (\`{a} l{a}  Shakespeare).
+\end{remark}
+
+Can we calculate how the different column vector presentations (the $c$'s and the $d$'s) are related? Yes. The idea is to write one set of basis elements in terms of the other. Precisely speaking, write 
+\[
+	f_j \stackrel{\mathcal{B}_1}{\leftrightsquigarrow} [\vec{f_j}]_{\mathcal{B}_1} = \begin{bmatrix} a_{1j} \\ a_{2j} \\ \vdots\\ a_{nj} \end{bmatrix}_{\mathcal{B}_1},
+\] 
+meaning $f_j = a_{1j} e_1 + \cdots + a_{nj} e_n$ for certain $a_{ij} \in \R$. Then creating a matrix (a box of numbers) $A$ such that the $j$-th column of said box are the numbers coming from $f_j$ above, then we have the relationship
+\begin{equation}\label{eq:changeOfBasis}
+	\begin{bmatrix} c_1\\ c_2\\ \vdots \\ c_n \end{bmatrix} = \begin{bmatrix} a_{11} & a_{12} & \cdots & a_{1n} \\ 
+a_{21} & a_{22} & \cdots & a_{2n}\\
+\vdots & \vdots & \ddots & \vdots \\
+a_{n1} & a_{n2} & \cdots  & a_{nn} \end{bmatrix} 
+\begin{bmatrix} d_1 \\ d_2\\ \vdots \\d_n \end{bmatrix} 
+\end{equation}
+Or in other words $[\vec{v}]_{\mathcal{B}_1} = A [\vec{v}]_{\mathcal{B}_2}$.  This is how you connect the two presentations. How to remember which side is which? I always forget. One mnemonic is to consider the following, in basis $\mathcal{B}_2$ the vector $v=f_1$ would be represented by the standard unit vector $\begin{bmatrix} 1 & 0 & 0 & \ldots & 0 \end{bmatrix}^\top \in \R^n$ and if this is taken as the $d$'s on the right hand side of \eqref{eq:changeOfBasis} the multiplication picks up the first column of the matrix which is indeed the representation of $f_1$ in the basis $\mathcal{B}_1$. Similarly for all the other standard unit vectors in $\R^n$. 
+
+
+\subsection*{Linear Maps}
+
+A linear map $A:V \to W$ is a function which respects the additive and the scalar multiplication structures on the vector spaces. The image of a vector $v\in V$ under the function $A$ is usually denoted by $Av$ unlike the customary $A(v)$ for functions, though both are acceptable.
+
+Linear functions (equivalently maps, or transformations\footnote{Functions are the most fundamental concept in mathematics and fittingly has many names that reflect many of the nuances of the ways they may appear to us, we can call them maps, or transformations, operators; and morphisms as well. Ultimately they are all functions, i.e. $f : X \to Y$ is a function that connects every element $x \in X$ to a unique element $y \in Y$. 
+	
+	If we think of $x \& y$ as quantities that relate to one another through some formula we simply use the word \emph{function}, if there is some geometric intuition we can call them \emph{maps} or \emph{mappings} (or \emph{charts} as in the case of patches of a manifold), if the domain and range of the function are the same and the context is geometric then the word \emph{transformation} is apt to give us the intuition of transforming (stretching and skewing rotating etc.) the input. Operators operate linearly on inputs.
+	
+	Ultimately they are all functions, and nothing more than functions, so the namings are just psychology. The word \emph{morphism} is a bit more than a function, it also implies that there is some structure in both the domain and the range that is being preserved, so linear maps (thinking of vectors as geometric thus we use the word map, and linear is an adjective specifying a property of the map) are also called as vector space homomorphisms, if the map goes from the same vector space to itself then it is a vector space endomorphism. 
+	
+	Some of these distinctions are personal, and not written in stone. But I'm just giving you the vibes around this plethora of words meaning essentially the same thing. And if one were to suck all the life out of mathematical writing, one would just call all of them \emph{functions}.}) satisfy
+\begin{align*}
+	A(v + w) &= Av + Aw \qquad \text{ for all } v, w \in V\\
+	A(cv) &= c (Av) \qquad \text{ for all } v \in V \text{ and } c \in \R.
+\end{align*}
+Note that in the first line the addition on the left hand side is the addition in $V$ and on the right hand side it is the addition in $W$ as $Av, Aw \in W$. Same for the scalar multiplication.
+
+
+If one chooses a basis $\mathcal{B}_1 = \{e_1, \ldots, e_n\}\subset V$ in the domain and another basis $\mathcal{B}_2 = \{f_1, \ldots, f_m\} \subset W$ in the range (I still use the $e$'s and $f$'s but they have different meaning now, they're bases of distinct vector spaces) then we can express the relationship between $v \in V$ written as a column vector $[\vec{v}]_{\mathcal{B}_1}$ and the vector $w = Av \in W$ written as a column vector $[\vec{w}]_{\mathcal{B}_2}$ using matrices.
+
+The coefficients of this matrix are given as
+\[
+	a_{ij} = \langle [\vec{f_i}]_{\mathcal{B}_2}, [\vec{A e_j}]_{\mathcal{B}_2} \rangle.
+\]
+Then constructing the box of numbers $A = [a_{ij}]_{i\in 1, \ldots, m; j = 1, \ldots, n}$, i.e.\ a matrix, we get $\vec{w} = A \vec{v}$. Using the same letter $A$ for the linear map and the box of numbers is an abuse of notation, but it is customary. And what one needs to remember is that in writing a linear map as a matrix one assumes a choice of basis for $V$ \emph{and} a choice of basis for $W$.
+
+Here what we mean by the inner product is the dot product you know and love of column vectors (written with respect to the $\mathcal{B}_2$ basis). This may seem obvious (as many other things in this note).
+
+
+
+\subsection*{Linear Functionals}
+
+Linear functionals are linear maps from a vector space $V$ to the one dimensional vector space $\R$. The space of linear maps between two vector spaces form a vector space where addition is considered pointwise. Therefore linear functionals on a vector space $V$ is also a vector space and it is denoted by one of $V^*, V'$, or the my personal favorite $V^\vee$. 
+
+
+Linear functionals are also called {\bf covectors},  in a sense they are {\bf co}mpanion to vectors. Given a $\lambda \in V^\vee$ (it is common to use small Greek letters for linear functionals) and $v \in V$ 
+\begin{equation}\label{eq:pairing}
+	\lambda(v) \in \R \text{ is also denoted by } \langle \lambda, v \rangle.
+\end{equation} 
+This is not an inner product it is simply the pairing given by the evaluation of the linear functional $\lambda$ at the vector $v$. But it uses the same notation as an inner product. The reason one would prefer this abuse of a notation is that if one had an inner product $\langle \cdot, \cdot \rangle $ then every vector $w\in V$ would define a linear functional by $\lambda_w : v \mapsto \langle w, v \rangle$. In a finite dimensional space if simply chooses a non-degenerate inner product, then in fact every $\lambda \in V^\vee$ is of the form $\lambda = \lambda_w$ defined above, for some vector $w \in V$.  In infinite dimensional Hilbert spaces this holds too, but only for \emph{continuous} linear functionals (the continuous dual mentioned above). This is called the Riesz representation theorem.
+
+The brackets in \eqref{eq:pairing} is simply evaluating the linear functional at the vector, and is called a {\bf pairing}. Although equivalent, using a pairing $\langle \cdot, \cdot \rangle : V^\vee \times V \to \R$ is preferable to using an inner product $\langle\cdot, \cdot \rangle : V \times V \to \R$ (imho) because a pairing doesn't make an implicit choice of an inner product. It lets us be very explicit when the time comes to make that choice. 
+
+Given a vector space $V$ and a basis $\mathcal{B} = \{e_1, \ldots, e_n\}$ we have a dual basis $\mathcal{B}^\vee = \{\delta_1, \ldots, \delta_n\}$ of $V^\vee$ where the dual basis vectors satisfy
+\[
+	\langle \delta_j, e_i \rangle = \begin{cases} 0 & \text{ if } i \neq j, \\
+	1 &\text{ if }  i = j, \end{cases}
+\]
+
+In matrix notation covectors are represented by $n\times 1$ matrices, i.e.\ row vectors. so we have
+\[
+	\lambda  \leftrightsquigarrow \begin{bmatrix} y_1 & y_2 & \cdots & y_n \end{bmatrix} \quad \text{ if } \quad \lambda = y_1 \delta_1 + y_2 \delta_2 + \cdots + y_n \delta_n \in V^\vee.
+\] 
+But of course if we think of $V^\vee$ as a vector space itself, with basis $\{\delta_1, \delta_1, \ldots, \delta_n\}$ then we should have represented $\lambda$ in vector notation as a column vector
+\[
+	[\lambda]_{\mathcal{B}} = \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{bmatrix}.
+\]
+
+If things are confusing to you at this point, they are only confusing because they are simple. Many things overlap, and one has to carefully peel of the different layers of meaning that are on top of another like the pile of coats on top of your bed at a large family gathering.
+
+Also insisting on presenting a covector horizontally vs.\ vertically is a personal choice, and it is impossible to insist on this consistently since covectors are also vectors in the end. 
+
+\subsection*{Derivatives as linear maps}
+
+Let $M$ and $N$ be two manifolds. Then consider a differentiable map $f: M\to N$. The definition of a derivative (equivalently differential) of $f$ at a point is \emph{the best linear approximation} to the function at that point. What do we mean by it? If $M$ is an open subset in $\R^n$ and the manifold $N$ is an open subset in $\R^n$ then we look at
+\begin{equation}\label{eq:derivativeDifference}
+	\operatorname{Diff}(h,t) := f(\vec{x} + t \vec{h}) - f(\vec{x}) - tA\vec{h}
+\end{equation}
+for all $\vec{h}\in \R^n$ and small enough $t\in \R$ such that $\vec{x} + t\vec{h}\in M$ so $f$-ing it still makes sense. Here  $A: \R^n \to \R^m$ is a linear map.
+
+If $f$ is differentiable at $\vec{x}$  then $\operatorname{Diff}(h,t) = o(t)$ as $t\to 0$ for all $\vec{h} \in \R^n$ for one linear map $A$ and for one $A$ only. In other words there is only one linear map which captures the first Taylor approximation of $f$. 
+
+Such an $A$---if it exists---is called the first derivative (or differential) of $f$ at $\vec{x}$. It is denoted by one of the many symbols
+\[
+	\d f_p, \d f\big|_p, \d f(p), Df(p), Df\big|_p, \partial f(p) .
+\]
+
+For general manifolds the derivative at a point $p \in M$ is a linear map $\d f_p : T_p M \to T_p N$. The argument is essentially the same since the notions of derivative or tangent vector on manifolds are all defined by pulling them back to the $\R^n, \R^m$ case by using their charts. So everything is defined by coordinate charts, which are defined on open subsets of Euclidean space. So no real generality was lost in our understanding in considering the case of open subsets of  $\R^n, \R^m$. 
+
+There is a historical reason for calling  differential vs. a derivative. But that doesn't matter. They are basically the same thing. 
+
+The gradient, however, is another beast. The gradient is a vector in $T_pM$, it is not a covector. In order to get a vector that from a covector (for functions $f: M\to N$ with $N \subset \R$ the derivative is a cotangent vector) we need an inner product. That is for the next section.
+
+Let us instead cap off this section by what would these covectors look like on a manifold if one chose a basis. First we choose a basis of vectors in the tangent space $T_p M$. Let us call it $\mathcal{B} = \{h_1, \ldots, h_m\} \in T_pM$. Given an $f : M \to \R$ the differential can be written as the row vector 
+\[
+	\d f_p \leftrightsquigarrow  \begin{bmatrix} \d f_p[h_1] & \d f_p[h_2]& \cdots & \d f_p[h_m] \end{bmatrix}
+\]
+using the dual basis to $\mathcal{B}$. The quantities $\d f_p[h_i]$ are numbers so it all fits. These numbers are the directional derivative of $f$ in the direction of $h_i$. The directional derivative of $f$ at $p$ in the direction of $h\in T_pM$ can be computed using any smooth path $\gamma$ passing through $p$ in the direction of $h$, that is $\gamma: (-1,1) \to M$, $\gamma(0) = 1$ and $\gamma'(0) =h \in T_pM$. Then $f \circ \gamma: (-1,1) \to \R$ and we can take the standard 1-dimensional derivative $(f \circ \gamma)'(0) \in \R$. That derivative, that number, is the directional derivative $\d f_p [h] \in \R$ (which is independent of the choice of $\gamma$ as long as $\gamma(0) = p$ and $\gamma'(0) = h$). 
+
+So to reiterate, if $[\vec{h}]_{\mathcal{B}} = \begin{bmatrix} c_1 & c_2 & \cdots & c_n \end{bmatrix}^\top$ is the vector representation of the tangent vector $h \in T_pM$ in the basis $\mathcal{B}$ (to reiterate once again this means $h = c_1 h_1 + c_2 h_2 + \cdots + c_m h_m$) then the directional derivative of a function $f : M \to \R$ in the direction of $h$ can be computed as
+\begin{align*}
+	\d f_p [h] &= [\d f_p]_{\mathcal{B}^\vee} [\vec{h}]_{\mathcal{B}} =  \begin{bmatrix}\d f_p[h_1] & \d f_p[h_2]& \cdots & \d f_p[h_m]  \end{bmatrix} \begin{bmatrix}
+	c_1 \\ c_2 \\ \vdots \\ c_m
+	\end{bmatrix} \\
+	&= c_1 \d f_p[h_1] + c_2 \d f_p[h_2] + \cdots  + c_m \d f_p[h_m] 
+\end{align*}
+
+
+
+\subsection{Bilinear forms, Inner Products (i.e. metrics)}
+
+A {\bf bilinear form} on a vector space $V$ is a function
+\[
+	\omega : V \times V \to \R
+\]
+satisfying linearity in both variables, staying true to its name, i.e.
+\begin{align*}
+	&& \omega(v_1 + v_2, w) = \omega(v_1, w) + \omega(v_2, w) && \omega(cv, w) = c\omega(v,w)\\
+	&& \omega(v, w_1 + w_2) = \omega(v, w_1) + \omega(v, \omega_2) && \omega(v, cw) = c\omega(v,w)
+\end{align*}
+for all $v,v_1, v_2, w, w_1, w_2 \in V$ and for all $c \in \R$.
+
+A bilinear form is symmetric if $\omega(v,w) = \omega(w.v)$, and is called non-degenerate if $\omega(v,w) = 0$ for all $w \in V$ implies $v = 0$.
+
+An {\bf inner product} satisfies \emph{positive definite}ness property which is stronger than nondegeneracy, meaning that $\omega(v,v)>0$ for every nonzero vector $v \in V$. An inner product is also sometimes called a metric, but usually the term (Riemannian) metric is reserved for a manifold. A Riemannian metric on a manifold $M$ is a choice of inner product $\omega_p$ on the vector space $T_p M$ for every $p \in M$ and these metrics need to be smooth as one varies the $p$. 
+
+\begin{remark}
+Just the word metric, without the Riemannian qualifier, is something quite different. It refers to an abstract distance function $d$ on any set $X$, satisfying a handful of properties like the triangle inequality.
+\end{remark}
+
+A bilinear form on a finite dimensional space can be represented by a matrix as follows. Given a basis $\mathcal{B} = \{e_1, e_2, \ldots, e_n\}$ of $V$ we look at the Gram-matrix $F = F_\omega$ where the $ij$-th entry is $\omega(e_i, e_j) = F_{ij}$ then
+\[
+	\omega(v,w) = \vec{v}^\top F \vec{w}
+\]
+(recall $\vec{v} = [\vec{v}]_{\mathcal{B}}$ and $\vec{w} = [\vec{w}]_{\mathcal{B}}$).
+
+If $\omega$ is symmetric meaning if $\omega(v,w) = \omega(w,v)$, then $F$ is symmetric as a matrix. If $\omega$ is nondegenerate then $F$ has full rank, i.e.\ invertible.
+
+\begin{remark}
+There is a quite important distinction between this matrix $F$ representing a bilinear form, and considering matrix as a linear map. It is not just a philosophical distinction.
+
+If you change the basis of $V$ to $\mathcal{B}' = \{f_1, \ldots, f_k\}$ then the bilinear form in the new basis can be represented by the matrix $$P^\top F P$$ where $P$ is the change of basis matrix (with columns as $[\vec{f_i}]_\mathcal{B}$). Indeed $\omega(v,w) = [\vec{v}]_{\mathcal{B}}^\top F [\vec{w}]_{\mathcal{B} } = (P[\vec{v}]_{\mathcal{B}'})^\top F (P[\vec{w}]_{\mathcal{B}'}) = [\vec{v}]_{\mathcal{B}'}^\top (P^\top F P) [\vec{w}]_{\mathcal{B}' } $. So the same bilinear form, when considered with respect to the basis $\mathcal{B}'$ would be given by the matrix $P^\top FP$.
+
+ However if $F$ is considered as a linear map, the same linear map after a change of basis to $\mathcal{B}'$ would be written with the matrix $$P\inv F P.$$ We would only have $P\inv = P^\top$ for orthogonal change of bases. 
+\end{remark}
+
+\noindent {\bf The musical isomorphisms. }Even though the matrix of a bilinear form is not a linear map, one can naturally create a linear map $\flat : V \to V^\vee$ out of a bilinear form making use of the fact that for every $v \in V$ the function $\omega(\cdot, v) \in V^\vee$ and that this correspondence is linear in $v$. In coordinates:
+\begin{align*}
+	\flat : V & \longrightarrow V^\vee\\
+	 \vec{v}& \longmapsto (F\vec{v})^\top.
+\end{align*}
+the inverse of which (which exists if $\omega$ is nondegenerate) is given in coordinates by
+\begin{align*}
+	\sharp : V^\vee &\longrightarrow V\\
+	\vec{\xi} &\longmapsto F\inv \vec{\xi}^\top. 
+\end{align*}
+Here we took $\xi$ as a row vector to begin with.
+
+So let us keep in mind that, $V$ and $V^\vee$ can be identified, but there are many ways to connect them. And identifying $V$ with $V^\vee$ as vector spaces (using a linear map $A :  V \to V^\vee$) amounts to a choice of metric (which uses the same matrix but in a bilinear form fashion). 
+
+However we have a canonical matching $(V^\vee)^\vee \cong V$, without any choice of metric. $(V^\vee)^\vee$ is called the {\bf double dual}. One simply associates a vector $v \in V$ to the linear functional $\operatorname{ev}_v: V^\vee \to \R$ eating linear functionals on $V$. The value of $\operatorname{ev}_v$ on a linear functional $\lambda$ is by evaluation of $\lambda$ at $v$, in other words $\operatorname{ev}_v(\lambda) = \langle \lambda, v\rangle$. Thus $v \mapsto \operatorname{ev}_v$ goes from $V$ to the double dual $(V^\vee)^\vee$. And it is a linear bijection for finite dimesional vector spaces. 
+
+
+\section*{Gradients... Finally!}
+
+So a loss function $\ell$ is a function from the parameter manifold $\Theta$ to the reals. Specialize to the case $\Theta = \R^P$ for convenience. The tangent space at a point $\vec{\theta}$ is also congruent to $\R^P$ and we can choose the standard coordinate basis. The derivative of $\ell$ at $\vec{\theta} \in \R^P$ is a cotangent vector 
+\[
+	d\ell_{\vec{\theta}} \in T_{\vec{\theta}}^*\Theta
+\]
+i.e. a covector of the tangent space $T_{\vec{\theta}}\Theta$ of the parameter manifold at the point $\vec{\theta}$. Given in the standard dual basis as a row-vector
+\[
+	[d\ell_{\vec{\theta}}]  = \begin{bmatrix}
+	\partial_1 \ell (\vec{\theta}) & \cdots & \partial_P \ell(\vec{\theta})
+	\end{bmatrix}
+\]
+where $\partial_i= \frac{\partial}{\partial \theta_i}$ is shorthand for the partial derivative with respect to the $i$\textsuperscript{th} coordinate.
+
+The parameter manifold is a Riemannian manifold, each tangent space is congruent to $\R^P$ with the standard Euclidean inner product (i.e.\ dot product). The gram matrix $F$ for this metric, with respect to the standard coordinate basis, and the standard dual basis is simply the identity matrix. In other words, the musical isomorphism $\sharp$ giving us vectors from covectors is simply the transpose.
+
+The gradient is defined as $\nabla\ell(\vec{\theta}) := \sharp (\d \ell_{\vec{\theta}})$ and so, in standard coordinate basis it is given as
+\[
+	[\nabla \ell (\vec{\theta}) ] = [\d \ell_{\vec{\theta}}]^\top =  \begin{bmatrix}
+	\partial_1 \ell(\vec{\theta}) \\ 
+	\vdots\\
+	\partial_P \ell(\vec{\theta})
+	\end{bmatrix}.
+\]
+This is the gradient. When the basis is understood, we will drop the brackets. 
+
+\noindent\hrulefill
+
+After all is said and done, we're back to what we knew.
+
+\medskip
+Much ado about nothing! 
+
+\medskip
+Just kidding, I think we are can now stand taller after our journey to \emph{abstractmathland} and back again.
+
+\end{document}
