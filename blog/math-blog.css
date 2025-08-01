@@ -183,12 +183,37 @@ p {
 .math.inline {
     display: inline-block;
     max-width: 100%;
-    overflow-x: auto;
+    overflow-x: visible;
     overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
     white-space: nowrap;
     vertical-align: middle;
 }
+/* Added new hover behavior */
+.math.inline:hover {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Added scrollbar hiding rules */
+.math.inline::-webkit-scrollbar {
+    height: 0px;
+    width: 0px;
+}
+
+/* Added hover scrollbar styling */
+.math.inline:hover::-webkit-scrollbar {
+    height: 6px;
+}
+
+.math.inline:hover::-webkit-scrollbar-thumb {
+    background-color: #666;
+    border-radius: 3px;
+}
+
+.math.inline:hover::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+}
+
 /* Mobile-specific improvements */
 @media screen and (max-width: 600px) {
     /* On mobile, only show scrollbars when actively scrolling */
