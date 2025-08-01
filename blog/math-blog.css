@@ -130,28 +130,52 @@ p {
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
-    /* Add subtle scrollbar styling */
+    /* Only show scrollbars when needed */
     scrollbar-width: thin;
+    scrollbar-color: transparent transparent; /* Make scrollbars invisible by default */
+}
+/* Only show scrollbars on hover or when actively scrolling */
+.math.display:hover {
     scrollbar-color: #ccc transparent;
 }
-/* Webkit scrollbar styling for display math */
+/* Webkit scrollbar styling - hide by default */
+
 .math.display::-webkit-scrollbar {
-    height: 8px; /* Slightly larger for mobile */
+    height: 8px;
+    background: transparent; /* Make track transparent */
 }
 
-
 .math.display::-webkit-scrollbar-track {
+    background: transparent; /* Keep track transparent */
+}
+
+/* .math.display::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+    border-radius: 4px;
+} */
+.math.display::-webkit-scrollbar-thumb {
+    background-color: transparent; /* Hide thumb by default */
+    border-radius: 4px;
+}
+
+/* .math.display::-webkit-scrollbar-thumb {
+    background-color: #666;
+    border-radius: 4px;
+    border: 1px solid #999;
+} */
+
+/* Show scrollbars on hover */
+.math.display:hover::-webkit-scrollbar-thumb {
+    background-color: #666;
+    border: 1px solid #999;
+}
+
+.math.display:hover::-webkit-scrollbar-track {
     background: rgba(0,0,0,0.1);
     border-radius: 4px;
 }
 
-.math.display::-webkit-scrollbar-thumb {
-    background-color: #666;
-    border-radius: 4px;
-    border: 1px solid #999;
-}
-
-.math.display::-webkit-scrollbar-thumb:hover {
+.math.display:hover::-webkit-scrollbar-thumb:hover {
     background-color: #333;
 }
 
@@ -165,33 +189,38 @@ p {
     white-space: nowrap;
     vertical-align: middle;
 }
-
 /* Mobile-specific improvements */
 @media screen and (max-width: 600px) {
-    /* Make scrollbars more visible on mobile */
+    /* On mobile, only show scrollbars when actively scrolling */
     .math.display::-webkit-scrollbar {
         height: 10px;
+        background: transparent;
     }
     
     .math.display::-webkit-scrollbar-thumb {
+        background-color: transparent;
+    }
+    
+    /* Show scrollbars when actively being touched/scrolled */
+    .math.display:active::-webkit-scrollbar-thumb {
         background-color: #333;
     }
     
-    /* Add padding to math containers for easier scrolling */
+    /* Remove the background styling that was adding visual clutter */
     .math.display {
-        padding: 0.5rem;
-        margin-left: -0.5rem;
-        margin-right: -0.5rem;
-        background-color: rgba(0,0,0,0.02);
-        border-radius: 4px;
+        padding: 0; /* Remove padding that was adding gray background */
+        margin-left: 0; /* Reset margins */
+        margin-right: 0;
+        background-color: transparent; /* Remove gray background */
+        border-radius: 0; /* Remove border radius */
     }
-    
     /* Ensure inline math doesn't break layout */
     .math.inline {
         max-width: calc(100vw - 2rem);
         font-size: 0.9em; /* Slightly smaller on mobile */
     }
 }
+
 
 /* Equation numbering */
 .math .tag {
