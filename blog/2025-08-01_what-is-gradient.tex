@@ -26,7 +26,7 @@ Given a basis of $V$ we can represent a vector $v$ by a (column) vector of real 
 \begin{equation}\label{eq:ebasisrep}
 	v \leftrightsquigarrow \vec{v} = \begin{bmatrix} c_1\\ c_2\\ \vdots \\ c_n \end{bmatrix}
 \end{equation}
-Although it is not terribly standard I will be rigid and keep representing elements of a vector space as a column vector. Row vectors will be reserved for co-vectors also known as linear functionals or dual vectors (coming soon to a subsection near you). The space of linear functionals is also a vector space, so in that sense what constitutes a vector and what constitutes a covector is not a mathematically justifiable distinction. \emph{If you take the linear functionals as your vector space then yesterday's covectors become today's vectors and yesterday's vectors become today's covectors.} Which we call a vector and which we call a covector tells more about us, and which object we consider to be more basic and which more derived (not in the sense of derivatives). 
+Although it is not fully standard nomenclature I will be rigid and keep representing elements of a vector space as a column vector. Row vectors will be reserved for co-vectors also known as linear functionals or dual vectors (see below). The space of linear functionals is also a vector space, so in that sense what constitutes a vector and what constitutes a covector is not a mathematically justifiable distinction. \emph{If you take the linear functionals as your vector space then yesterday's covectors become today's vectors and yesterday's vectors become today's covectors.} Which we call a vector and which we call a covector tells more about us, and which object we consider to be more basic and which more derived (not in the sense of derivatives). 
 
 Also although this is not standard notation either it might be wise to distinguish between the vector $v\in V$ and its presentation as a column vector $\vec{v} \in \R^n$ by using the bold notation with the same letter. 
 
@@ -55,7 +55,7 @@ a_{21} & a_{22} & \cdots & a_{2n}\\
 a_{n1} & a_{n2} & \cdots  & a_{nn} \end{bmatrix} 
 \begin{bmatrix} d_1 \\ d_2\\ \vdots \\d_n \end{bmatrix} 
 \end{equation}
-Or in other words $[\vec{v}]_{\mathcal{B}_1} = A [\vec{v}]_{\mathcal{B}_2}$.  This is how you connect the two presentations. How to remember which side is which? I always forget. One mnemonic is to consider the following, in basis $\mathcal{B}_2$ the vector $v=f_1$ would be represented by the standard unit vector $\begin{bmatrix} 1 & 0 & 0 & \ldots & 0 \end{bmatrix}^\top \in \R^n$ and if this is taken as the $d$'s on the right hand side of \eqref{eq:changeOfBasis} the multiplication picks up the first column of the matrix which is indeed the representation of $f_1$ in the basis $\mathcal{B}_1$. Similarly for all the other standard unit vectors in $\R^n$. 
+Or in other words $[\vec{v}]_{\mathcal{B}_1} = A [\vec{v}]_{\mathcal{B}_2}$.  This is how you connect the two presentations. How to remember which side is which? I always forget. One mnemonic is to consider the following, in basis $\mathcal{B}_2$ the vector $v=f_1$ would be represented by the standard unit vector $\begin{bmatrix} 1 & 0 & 0 & \ldots & 0 \end{bmatrix}^\top \in \R^n$ and if this is taken as the $d$'s on the right hand side, the multiplication picks up the first column of the matrix which is indeed the representation of $f_1$ in the basis $\mathcal{B}_1$. Similarly for all the other standard unit vectors in $\R^n$. 
 
 
 \subsection*{Linear Maps}
@@ -97,14 +97,14 @@ Linear functionals are also called {\bf covectors},  in a sense they are {\bf co
 \begin{equation}\label{eq:pairing}
 	\lambda(v) \in \R \text{ is also denoted by } \langle \lambda, v \rangle.
 \end{equation} 
-This is not an inner product it is simply the pairing given by the evaluation of the linear functional $\lambda$ at the vector $v$. But it uses the same notation as an inner product. The reason one would prefer this abuse of a notation is that if one had an inner product $\langle \cdot, \cdot \rangle $ then every vector $w\in V$ would define a linear functional by $\lambda_w : v \mapsto \langle w, v \rangle$. In a finite dimensional space if simply chooses a non-degenerate inner product, then in fact every $\lambda \in V^\vee$ is of the form $\lambda = \lambda_w$ defined above, for some vector $w \in V$.  In infinite dimensional Hilbert spaces this holds too, but only for \emph{continuous} linear functionals (the continuous dual mentioned above). This is called the Riesz representation theorem.
+This is not an inner product it is simply the pairing given by the evaluation of the linear functional $\lambda$ at the vector $v$. But it uses the same notation as an inner product. The reason one would prefer this abuse of a notation is that if one had an inner product $\langle \cdot, \cdot \rangle $ then every vector $w\in V$ would define a linear functional by $\lambda_w : v \mapsto \langle w, v \rangle$. In a finite dimensional space if simply chooses a non-degenerate inner product, then in fact every $\lambda \in V^\vee$ is of the form $\lambda = \lambda_w$ defined above, for some vector $w \in V$. This is called the Riesz representation theorem, and actually holds in infinite dimensional Hilbert spaces too\footnote{But only for the continuous dual. In finite dimensions linear is continuous.}.
 
-The brackets in \eqref{eq:pairing} is simply evaluating the linear functional at the vector, and is called a {\bf pairing}. Although equivalent, using a pairing $\langle \cdot, \cdot \rangle : V^\vee \times V \to \R$ is preferable to using an inner product $\langle\cdot, \cdot \rangle : V \times V \to \R$ (imho) because a pairing doesn't make an implicit choice of an inner product. It lets us be very explicit when the time comes to make that choice. 
+The bracket simply evaluates  the linear functional at the vector, and is called a {\bf pairing}. Although equivalent, using a pairing $\langle \cdot, \cdot \rangle : V^\vee \times V \to \R$ is preferable to using an inner product $\langle\cdot, \cdot \rangle : V \times V \to \R$ (imho) because a pairing doesn't make an implicit choice of an inner product. It lets us be very explicit when the time comes to make that choice. 
 
 Given a vector space $V$ and a basis $\mathcal{B} = \{e_1, \ldots, e_n\}$ we have a dual basis $\mathcal{B}^\vee = \{\delta_1, \ldots, \delta_n\}$ of $V^\vee$ where the dual basis vectors satisfy
 \[
 	\langle \delta_j, e_i \rangle = \begin{cases} 0 & \text{ if } i \neq j, \\
-	1 &\text{ if }  i = j, \end{cases}
+	1 &\text{ if }  i = j. \end{cases}
 \]
 
 In matrix notation covectors are represented by $n\times 1$ matrices, i.e.\ row vectors. so we have
@@ -124,40 +124,47 @@ Also insisting on presenting a covector horizontally vs.\ vertically is a person
 
 Let $M$ and $N$ be two manifolds. Then consider a differentiable map $f: M\to N$. The definition of a derivative (equivalently differential) of $f$ at a point is \emph{the best linear approximation} to the function at that point. What do we mean by it? If $M$ is an open subset in $\R^n$ and the manifold $N$ is an open subset in $\R^n$ then we look at
 \begin{equation}\label{eq:derivativeDifference}
-	\operatorname{Diff}(h,t) := f(\vec{x} + t \vec{h}) - f(\vec{x}) - tA\vec{h}
+	\operatorname{Diff}(\vec{h},t) := f(\vec{x} + t \vec{h}) - f(\vec{x}) - tA\vec{h}
 \end{equation}
 for all $\vec{h}\in \R^n$ and small enough $t\in \R$ such that $\vec{x} + t\vec{h}\in M$ so $f$-ing it still makes sense. Here  $A: \R^n \to \R^m$ is a linear map.
 
-If $f$ is differentiable at $\vec{x}$  then $\operatorname{Diff}(h,t) = o(t)$ as $t\to 0$ for all $\vec{h} \in \R^n$ for one linear map $A$ and for one $A$ only. In other words there is only one linear map which captures the first Taylor approximation of $f$. 
+If $f$ is differentiable at $\vec{x}$  then $\operatorname{Diff}(\vec{h},t) = o(t)$ as $t\to 0$ for all $\vec{h} \in \R^n$ for one linear map $A$ and for one $A$ only. In other words there is only one linear map which captures the first Taylor approximation of $f$. 
 
 Such an $A$---if it exists---is called the first derivative (or differential) of $f$ at $\vec{x}$. It is denoted by one of the many symbols
 \[
-	\d f_p, \d f\big|_p, \d f(p), Df(p), Df\big|_p, \partial f(p) .
+	\d f_p, \d f\big|_p, \d f(p), Df(p), Df\big|_p,  f'(p) .
 \]
 
-For general manifolds the derivative at a point $p \in M$ is a linear map $\d f_p : T_p M \to T_p N$. The argument is essentially the same since the notions of derivative or tangent vector on manifolds are all defined by pulling them back to the $\R^n, \R^m$ case by using their charts. So everything is defined by coordinate charts, which are defined on open subsets of Euclidean space. So no real generality was lost in our understanding in considering the case of open subsets of  $\R^n, \R^m$. 
+For general manifolds the derivative at a point $p \in M$ is a linear map $\d f_p : T_p M \to T_{f(p)} N$ between the corresponding tangent spaces. The argument is essentially the same since the notions of derivative or tangent vector on manifolds are all defined by pulling them back to the $\R^n, \R^m$ case by using their charts. So everything is defined by coordinate charts, which are defined on open subsets of Euclidean space. So no real generality was lost. We understood just as we would in the general case while considering the case of open subsets of  $\R^n, \R^m$. 
 
-There is a historical reason for calling  differential vs. a derivative. But that doesn't matter. They are basically the same thing. 
+There is a historical reason for calling  this map a differential vs. a derivative. But that doesn't matter. They are basically the same thing. 
 
 The gradient, however, is another beast. The gradient is a vector in $T_pM$, it is not a covector. In order to get a vector that from a covector (for functions $f: M\to N$ with $N \subset \R$ the derivative is a cotangent vector) we need an inner product. That is for the next section.
 
-Let us instead cap off this section by what would these covectors look like on a manifold if one chose a basis. First we choose a basis of vectors in the tangent space $T_p M$. Let us call it $\mathcal{B} = \{h_1, \ldots, h_m\} \in T_pM$. Given an $f : M \to \R$ the differential can be written as the row vector 
+
+Let us instead cap off this section by what these covectors would look like on a manifold if one were to choose a basis. First we choose a basis of vectors in the tangent space $T_p M$. Let us call it $\mathcal{B} = \{h_1, \ldots, h_m\} \in T_pM$. Given an $f : M \to \R$ the differential is a linear map $T_pM \to \R$ (since $T_{f(p)}\R \cong \R$) and with respect to this basis this linear map is given by the matrix 
 \[
-	\d f_p \leftrightsquigarrow  \begin{bmatrix} \d f_p[h_1] & \d f_p[h_2]& \cdots & \d f_p[h_m] \end{bmatrix}
+	\d f_p \leftrightsquigarrow  \begin{bmatrix} \d f_p[h_1] & \d f_p[h_2]& \cdots & \d f_p[h_m] \end{bmatrix}.
 \]
-using the dual basis to $\mathcal{B}$. The quantities $\d f_p[h_i]$ are numbers so it all fits. These numbers are the directional derivative of $f$ in the direction of $h_i$. The directional derivative of $f$ at $p$ in the direction of $h\in T_pM$ can be computed using any smooth path $\gamma$ passing through $p$ in the direction of $h$, that is $\gamma: (-1,1) \to M$, $\gamma(0) = 1$ and $\gamma'(0) =h \in T_pM$. Then $f \circ \gamma: (-1,1) \to \R$ and we can take the standard 1-dimensional derivative $(f \circ \gamma)'(0) \in \R$. That derivative, that number, is the directional derivative $\d f_p [h] \in \R$ (which is independent of the choice of $\gamma$ as long as $\gamma(0) = p$ and $\gamma'(0) = h$). 
+The quantities $\d f_p[h_i]$ are numbers which give directional derivative of $f$ in the direction of $h_i$. The directional derivative of $f$ at $p$ in the direction of $h\in T_pM$ can be computed using any smooth path $\gamma$ passing through $p$ in the direction of $h$, that is $\gamma: (-1,1) \to M$, $\gamma(0) = 1$ and $\gamma'(0) =h \in T_pM$. Then $f \circ \gamma: (-1,1) \to \R$ and we can take the standard 1-dimensional derivative $(f \circ \gamma)'(0) \in \R$. That derivative, that number, is the directional derivative $\d f_p [h] \in \R$ (which is independent of the choice of $\gamma$ as long as $\gamma(0) = p$ and $\gamma'(0) = h$). 
+
+\begin{figure}[ht!]
+\centering
+\includesvg[width=0.7\textwidth]{./figures/manifold_tangent_vec.svg}
+\caption*{One intuitive way to define tangent vectors on the manifold $M$ at $p$ is via smooth paths $\gamma$ on $M$ that pass through $p$. One intuitively thinks of $\gamma'(0)$ as the tangent vector.}
+\end{figure}
 
 So to reiterate, if $[\vec{h}]_{\mathcal{B}} = \begin{bmatrix} c_1 & c_2 & \cdots & c_n \end{bmatrix}^\top$ is the vector representation of the tangent vector $h \in T_pM$ in the basis $\mathcal{B}$ (to reiterate once again this means $h = c_1 h_1 + c_2 h_2 + \cdots + c_m h_m$) then the directional derivative of a function $f : M \to \R$ in the direction of $h$ can be computed as
 \begin{align*}
 	\d f_p [h] &= [\d f_p]_{\mathcal{B}^\vee} [\vec{h}]_{\mathcal{B}} =  \begin{bmatrix}\d f_p[h_1] & \d f_p[h_2]& \cdots & \d f_p[h_m]  \end{bmatrix} \begin{bmatrix}
 	c_1 \\ c_2 \\ \vdots \\ c_m
 	\end{bmatrix} \\
-	&= c_1 \d f_p[h_1] + c_2 \d f_p[h_2] + \cdots  + c_m \d f_p[h_m] 
+	&= c_1 \d f_p[h_1] + c_2 \d f_p[h_2] + \cdots  + c_m \d f_p[h_m] .
 \end{align*}
 
 
 
-\subsection{Bilinear forms, Inner Products (i.e. metrics)}
+\subsection*{Bilinear forms, Inner Products (i.e. metrics)}
 
 A {\bf bilinear form} on a vector space $V$ is a function
 \[
@@ -172,7 +179,7 @@ for all $v,v_1, v_2, w, w_1, w_2 \in V$ and for all $c \in \R$.
 
 A bilinear form is symmetric if $\omega(v,w) = \omega(w.v)$, and is called non-degenerate if $\omega(v,w) = 0$ for all $w \in V$ implies $v = 0$.
 
-An {\bf inner product} satisfies \emph{positive definite}ness property which is stronger than nondegeneracy, meaning that $\omega(v,v)>0$ for every nonzero vector $v \in V$. An inner product is also sometimes called a metric, but usually the term (Riemannian) metric is reserved for a manifold. A Riemannian metric on a manifold $M$ is a choice of inner product $\omega_p$ on the vector space $T_p M$ for every $p \in M$ and these metrics need to be smooth as one varies the $p$. 
+An {\bf inner product} satisfies \emph{positive definite}ness property which is stronger than nondegeneracy, meaning that $\omega(v,v)>0$ for every nonzero vector $v \in V$. An inner product is also sometimes called a metric, but usually the term (Riemannian) metric is reserved for a manifold. A Riemannian metric on a manifold $M$ is a choice of inner product $\omega_p$ on the vector space $T_p M$ for every $p \in M$ and these metrics need to be smooth as one varies the point $p$. 
 
 \begin{remark}
 Just the word metric, without the Riemannian qualifier, is something quite different. It refers to an abstract distance function $d$ on any set $X$, satisfying a handful of properties like the triangle inequality.
@@ -194,7 +201,7 @@ If you change the basis of $V$ to $\mathcal{B}' = \{f_1, \ldots, f_k\}$ then the
  However if $F$ is considered as a linear map, the same linear map after a change of basis to $\mathcal{B}'$ would be written with the matrix $$P\inv F P.$$ We would only have $P\inv = P^\top$ for orthogonal change of bases. 
 \end{remark}
 
-\noindent {\bf The musical isomorphisms. }Even though the matrix of a bilinear form is not a linear map, one can naturally create a linear map $\flat : V \to V^\vee$ out of a bilinear form making use of the fact that for every $v \in V$ the function $\omega(\cdot, v) \in V^\vee$ and that this correspondence is linear in $v$. In coordinates:
+\subsubsection*{The musical isomorphisms. }Even though the matrix of a bilinear form is not a linear map, one can naturally create a linear map $\flat : V \to V^\vee$ out of a bilinear form making use of the fact that for every $v \in V$ the function $\omega(\cdot, v) \in V^\vee$ and that this correspondence is linear in $v$. In coordinates:
 \begin{align*}
 	\flat : V & \longrightarrow V^\vee\\
 	 \vec{v}& \longmapsto (F\vec{v})^\top.
@@ -206,9 +213,8 @@ the inverse of which (which exists if $\omega$ is nondegenerate) is given in coo
 \end{align*}
 Here we took $\xi$ as a row vector to begin with.
 
-So let us keep in mind that, $V$ and $V^\vee$ can be identified, but there are many ways to connect them. And identifying $V$ with $V^\vee$ as vector spaces (using a linear map $A :  V \to V^\vee$) amounts to a choice of metric (which uses the same matrix but in a bilinear form fashion). 
-
-However we have a canonical matching $(V^\vee)^\vee \cong V$, without any choice of metric. $(V^\vee)^\vee$ is called the {\bf double dual}. One simply associates a vector $v \in V$ to the linear functional $\operatorname{ev}_v: V^\vee \to \R$ eating linear functionals on $V$. The value of $\operatorname{ev}_v$ on a linear functional $\lambda$ is by evaluation of $\lambda$ at $v$, in other words $\operatorname{ev}_v(\lambda) = \langle \lambda, v\rangle$. Thus $v \mapsto \operatorname{ev}_v$ goes from $V$ to the double dual $(V^\vee)^\vee$. And it is a linear bijection for finite dimesional vector spaces. 
+So let us keep in mind that, $V$ and $V^\vee$ can be identified, but there are many ways to connect them. And identifying $V$ with $V^\vee$ as vector spaces using a linear map $A :  V \to V^\vee$ is equivalent to the musical isomorphism with respect to a choice of metric whose Gram matrix is $A$ (unless you do not choose the bases that were the obvious choice). This all depends on a choice of inner product, and not canonical\footnote{
+On the other hand we have a canonical matching $(V^\vee)^\vee \cong V$, without any choice of metric. $(V^\vee)^\vee$ is called the {\bf double dual}. One simply associates a vector $v \in V$ to the linear functional $\operatorname{ev}_v: V^\vee \to \R$ eating linear functionals on $V$. The value of $\operatorname{ev}_v$ on a linear functional $\lambda$ is by evaluation of $\lambda$ at $v$, in other words $\operatorname{ev}_v(\lambda) = \langle \lambda, v\rangle$. Thus $v \mapsto \operatorname{ev}_v$ goes from $V$ to the double dual $(V^\vee)^\vee$. And it is a linear bijection for finite dimesional vector spaces.}.
 
 
 \section*{Gradients... Finally!}

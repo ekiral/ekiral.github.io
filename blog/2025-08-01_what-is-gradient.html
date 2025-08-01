@@ -96,12 +96,12 @@
     class="math display">\[\label{eq:ebasisrep}
         v \leftrightsquigarrow \mathbf{\boldsymbol{v}} = \begin{bmatrix}
     c_1\\ c_2\\ \vdots \\ c_n \end{bmatrix}\]</span> Although it is not
-    terribly standard I will be rigid and keep representing elements of
-    a vector space as a column vector. Row vectors will be reserved for
-    co-vectors also known as linear functionals or dual vectors (coming
-    soon to a subsection near you). The space of linear functionals is
-    also a vector space, so in that sense what constitutes a vector and
-    what constitutes a covector is not a mathematically justifiable
+    fully standard nomenclature I will be rigid and keep representing
+    elements of a vector space as a column vector. Row vectors will be
+    reserved for co-vectors also known as linear functionals or dual
+    vectors (see below). The space of linear functionals is also a
+    vector space, so in that sense what constitutes a vector and what
+    constitutes a covector is not a mathematically justifiable
     distinction. <em>If you take the linear functionals as your vector
     space then yesterday’s covectors become today’s vectors and
     yesterday’s vectors become today’s covectors.</em> Which we call a
@@ -184,9 +184,7 @@
     standard unit vector <span class="math inline">\(\begin{bmatrix} 1
     &amp; 0 &amp; 0 &amp; \ldots &amp; 0 \end{bmatrix}^\top \in
     \mathbb{R}^n\)</span> and if this is taken as the <span
-    class="math inline">\(d\)</span>’s on the right hand side of <a
-    href="#eq:changeOfBasis" data-reference-type="eqref"
-    data-reference="eq:changeOfBasis">[eq:changeOfBasis]</a> the
+    class="math inline">\(d\)</span>’s on the right hand side, the
     multiplication picks up the first column of the matrix which is
     indeed the representation of <span
     class="math inline">\(f_1\)</span> in the basis <span
@@ -280,20 +278,19 @@
     every <span class="math inline">\(\lambda \in V^\vee\)</span> is of
     the form <span class="math inline">\(\lambda = \lambda_w\)</span>
     defined above, for some vector <span class="math inline">\(w \in
-    V\)</span>. In infinite dimensional Hilbert spaces this holds too,
-    but only for <em>continuous</em> linear functionals (the continuous
-    dual mentioned above). This is called the Riesz representation
-    theorem.</p>
-    <p>The brackets in <a href="#eq:pairing" data-reference-type="eqref"
-    data-reference="eq:pairing">[eq:pairing]</a> is simply evaluating
-    the linear functional at the vector, and is called a
-    <span><strong>pairing</strong></span>. Although equivalent, using a
-    pairing <span class="math inline">\(\langle \cdot, \cdot \rangle :
-    V^\vee \times V \to \mathbb{R}\)</span> is preferable to using an
-    inner product <span class="math inline">\(\langle\cdot, \cdot
-    \rangle : V \times V \to \mathbb{R}\)</span> (imho) because a
-    pairing doesn’t make an implicit choice of an inner product. It lets
-    us be very explicit when the time comes to make that choice.</p>
+    V\)</span>. This is called the Riesz representation theorem, and
+    actually holds in infinite dimensional Hilbert spaces too<a
+    href="#fn3" class="footnote-ref" id="fnref3"
+    role="doc-noteref"><sup>3</sup></a>.</p>
+    <p>The bracket simply evaluates the linear functional at the vector,
+    and is called a <span><strong>pairing</strong></span>. Although
+    equivalent, using a pairing <span class="math inline">\(\langle
+    \cdot, \cdot \rangle : V^\vee \times V \to \mathbb{R}\)</span> is
+    preferable to using an inner product <span
+    class="math inline">\(\langle\cdot, \cdot \rangle : V \times V \to
+    \mathbb{R}\)</span> (imho) because a pairing doesn’t make an
+    implicit choice of an inner product. It lets us be very explicit
+    when the time comes to make that choice.</p>
     <p>Given a vector space <span class="math inline">\(V\)</span> and a
     basis <span class="math inline">\(\mathcal{B} = \{e_1, \ldots,
     e_n\}\)</span> we have a dual basis <span
@@ -302,7 +299,7 @@
     where the dual basis vectors satisfy <span
     class="math display">\[\langle \delta_j, e_i \rangle = \begin{cases}
     0 &amp; \text{ if } i \neq j, \\
-        1 &amp;\text{ if }  i = j, \end{cases}\]</span></p>
+        1 &amp;\text{ if }  i = j. \end{cases}\]</span></p>
     <p>In matrix notation covectors are represented by <span
     class="math inline">\(n\times 1\)</span> matrices, i.e. row vectors.
     so we have <span
@@ -339,10 +336,10 @@
     <span class="math inline">\(N\)</span> is an open subset in <span
     class="math inline">\(\mathbb{R}^n\)</span> then we look at <span
     class="math display">\[\label{eq:derivativeDifference}
-        \operatorname{Diff}(h,t) := f(\mathbf{\boldsymbol{x}} + t
-    \mathbf{\boldsymbol{h}}) - f(\mathbf{\boldsymbol{x}}) -
-    tA\mathbf{\boldsymbol{h}}\]</span> for all <span
-    class="math inline">\(\mathbf{\boldsymbol{h}}\in
+        \operatorname{Diff}(\mathbf{\boldsymbol{h}},t) :=
+    f(\mathbf{\boldsymbol{x}} + t \mathbf{\boldsymbol{h}}) -
+    f(\mathbf{\boldsymbol{x}}) - tA\mathbf{\boldsymbol{h}}\]</span> for
+    all <span class="math inline">\(\mathbf{\boldsymbol{h}}\in
     \mathbb{R}^n\)</span> and small enough <span
     class="math inline">\(t\in \mathbb{R}\)</span> such that <span
     class="math inline">\(\mathbf{\boldsymbol{x}} +
@@ -352,9 +349,10 @@
     \mathbb{R}^m\)</span> is a linear map.</p>
     <p>If <span class="math inline">\(f\)</span> is differentiable at
     <span class="math inline">\(\mathbf{\boldsymbol{x}}\)</span> then
-    <span class="math inline">\(\operatorname{Diff}(h,t) = o(t)\)</span>
-    as <span class="math inline">\(t\to 0\)</span> for all <span
-    class="math inline">\(\mathbf{\boldsymbol{h}} \in
+    <span
+    class="math inline">\(\operatorname{Diff}(\mathbf{\boldsymbol{h}},t)
+    = o(t)\)</span> as <span class="math inline">\(t\to 0\)</span> for
+    all <span class="math inline">\(\mathbf{\boldsymbol{h}} \in
     \mathbb{R}^n\)</span> for one linear map <span
     class="math inline">\(A\)</span> and for one <span
     class="math inline">\(A\)</span> only. In other words there is only
@@ -366,21 +364,22 @@
     class="math inline">\(\mathbf{\boldsymbol{x}}\)</span>. It is
     denoted by one of the many symbols <span
     class="math display">\[\,\mathrm{d}f_p, \,\mathrm{d}f\big|_p,
-    \,\mathrm{d}f(p), Df(p), Df\big|_p, \partial f(p) .\]</span></p>
+    \,\mathrm{d}f(p), Df(p), Df\big|_p,  f&#39;(p) .\]</span></p>
     <p>For general manifolds the derivative at a point <span
     class="math inline">\(p \in M\)</span> is a linear map <span
-    class="math inline">\(\,\mathrm{d}f_p : T_p M \to T_p N\)</span>.
-    The argument is essentially the same since the notions of derivative
-    or tangent vector on manifolds are all defined by pulling them back
-    to the <span class="math inline">\(\mathbb{R}^n,
-    \mathbb{R}^m\)</span> case by using their charts. So everything is
-    defined by coordinate charts, which are defined on open subsets of
-    Euclidean space. So no real generality was lost in our understanding
-    in considering the case of open subsets of <span
+    class="math inline">\(\,\mathrm{d}f_p : T_p M \to T_{f(p)}
+    N\)</span> between the corresponding tangent spaces. The argument is
+    essentially the same since the notions of derivative or tangent
+    vector on manifolds are all defined by pulling them back to the
+    <span class="math inline">\(\mathbb{R}^n, \mathbb{R}^m\)</span> case
+    by using their charts. So everything is defined by coordinate
+    charts, which are defined on open subsets of Euclidean space. So no
+    real generality was lost. We understood just as we would in the
+    general case while considering the case of open subsets of <span
     class="math inline">\(\mathbb{R}^n, \mathbb{R}^m\)</span>.</p>
-    <p>There is a historical reason for calling differential vs. a
-    derivative. But that doesn’t matter. They are basically the same
-    thing.</p>
+    <p>There is a historical reason for calling this map a differential
+    vs. a derivative. But that doesn’t matter. They are basically the
+    same thing.</p>
     <p>The gradient, however, is another beast. The gradient is a vector
     in <span class="math inline">\(T_pM\)</span>, it is not a covector.
     In order to get a vector that from a covector (for functions <span
@@ -388,20 +387,22 @@
     class="math inline">\(N \subset \mathbb{R}\)</span> the derivative
     is a cotangent vector) we need an inner product. That is for the
     next section.</p>
-    <p>Let us instead cap off this section by what would these covectors
-    look like on a manifold if one chose a basis. First we choose a
-    basis of vectors in the tangent space <span
+    <p>Let us instead cap off this section by what these covectors would
+    look like on a manifold if one were to choose a basis. First we
+    choose a basis of vectors in the tangent space <span
     class="math inline">\(T_p M\)</span>. Let us call it <span
     class="math inline">\(\mathcal{B} = \{h_1, \ldots, h_m\} \in
     T_pM\)</span>. Given an <span class="math inline">\(f : M \to
-    \mathbb{R}\)</span> the differential can be written as the row
-    vector <span class="math display">\[\,\mathrm{d}f_p
+    \mathbb{R}\)</span> the differential is a linear map <span
+    class="math inline">\(T_pM \to \mathbb{R}\)</span> (since <span
+    class="math inline">\(T_{f(p)}\mathbb{R}\cong \mathbb{R}\)</span>)
+    and with respect to this basis this linear map is given by the
+    matrix <span class="math display">\[\,\mathrm{d}f_p
     \leftrightsquigarrow  \begin{bmatrix} \,\mathrm{d}f_p[h_1] &amp;
     \,\mathrm{d}f_p[h_2]&amp; \cdots &amp; \,\mathrm{d}f_p[h_m]
-    \end{bmatrix}\]</span> using the dual basis to <span
-    class="math inline">\(\mathcal{B}\)</span>. The quantities <span
-    class="math inline">\(\,\mathrm{d}f_p[h_i]\)</span> are numbers so
-    it all fits. These numbers are the directional derivative of <span
+    \end{bmatrix}.\]</span> The quantities <span
+    class="math inline">\(\,\mathrm{d}f_p[h_i]\)</span> are numbers
+    which give directional derivative of <span
     class="math inline">\(f\)</span> in the direction of <span
     class="math inline">\(h_i\)</span>. The directional derivative of
     <span class="math inline">\(f\)</span> at <span
@@ -422,6 +423,17 @@
     <span class="math inline">\(\gamma\)</span> as long as <span
     class="math inline">\(\gamma(0) = p\)</span> and <span
     class="math inline">\(\gamma&#39;(0) = h\)</span>).</p>
+    <figure>
+    <img src="./figures/manifold_tangent_vec.svg" style="width:70.0%" />
+    <figcaption>One intuitive way to define tangent vectors on the
+    manifold <span class="math inline">\(M\)</span> at <span
+    class="math inline">\(p\)</span> is via smooth paths <span
+    class="math inline">\(\gamma\)</span> on <span
+    class="math inline">\(M\)</span> that pass through <span
+    class="math inline">\(p\)</span>. One intuitively thinks of <span
+    class="math inline">\(\gamma&#39;(0)\)</span> as the tangent
+    vector.</figcaption>
+    </figure>
     <p>So to reiterate, if <span
     class="math inline">\([\mathbf{\boldsymbol{h}}]_{\mathcal{B}} =
     \begin{bmatrix} c_1 &amp; c_2 &amp; \cdots &amp; c_n
@@ -442,9 +454,10 @@
         c_1 \\ c_2 \\ \vdots \\ c_m
         \end{bmatrix} \\
         &amp;= c_1 \,\mathrm{d}f_p[h_1] + c_2 \,\mathrm{d}f_p[h_2] +
-    \cdots  + c_m \,\mathrm{d}f_p[h_m]
+    \cdots  + c_m \,\mathrm{d}f_p[h_m] .
     \end{aligned}\]</span></p>
-    <h2 id="bilinear-forms-inner-products-i.e.-metrics">Bilinear forms,
+    <h2 class="unnumbered"
+    id="bilinear-forms-inner-products-i.e.-metrics">Bilinear forms,
     Inner Products (i.e. metrics)</h2>
     <p>A <span><strong>bilinear form</strong></span> on a vector space
     <span class="math inline">\(V\)</span> is a function <span
@@ -474,7 +487,7 @@
     inner product <span class="math inline">\(\omega_p\)</span> on the
     vector space <span class="math inline">\(T_p M\)</span> for every
     <span class="math inline">\(p \in M\)</span> and these metrics need
-    to be smooth as one varies the <span
+    to be smooth as one varies the point <span
     class="math inline">\(p\)</span>.</p>
     <div class="remark">
     <p><strong>Remark 2</strong>. <em>Just the word metric, without the
@@ -533,6 +546,8 @@
     P.\]</span> We would only have <span class="math inline">\(P^{-1}=
     P^\top\)</span> for orthogonal change of bases.</em></p>
     </div>
+    <h3 class="unnumbered" id="the-musical-isomorphisms.">The musical
+    isomorphisms. </h3>
     <p>Even though the matrix of a bilinear form is not a linear map,
     one can naturally create a linear map <span
     class="math inline">\(\flat : V \to V^\vee\)</span> out of a
@@ -559,29 +574,14 @@
     class="math inline">\(V^\vee\)</span> can be identified, but there
     are many ways to connect them. And identifying <span
     class="math inline">\(V\)</span> with <span
-    class="math inline">\(V^\vee\)</span> as vector spaces (using a
-    linear map <span class="math inline">\(A :  V \to V^\vee\)</span>)
-    amounts to a choice of metric (which uses the same matrix but in a
-    bilinear form fashion).</p>
-    <p>However we have a canonical matching <span
-    class="math inline">\((V^\vee)^\vee \cong V\)</span>, without any
-    choice of metric. <span class="math inline">\((V^\vee)^\vee\)</span>
-    is called the <span><strong>double dual</strong></span>. One simply
-    associates a vector <span class="math inline">\(v \in V\)</span> to
-    the linear functional <span
-    class="math inline">\(\operatorname{ev}_v: V^\vee \to
-    \mathbb{R}\)</span> eating linear functionals on <span
-    class="math inline">\(V\)</span>. The value of <span
-    class="math inline">\(\operatorname{ev}_v\)</span> on a linear
-    functional <span class="math inline">\(\lambda\)</span> is by
-    evaluation of <span class="math inline">\(\lambda\)</span> at <span
-    class="math inline">\(v\)</span>, in other words <span
-    class="math inline">\(\operatorname{ev}_v(\lambda) = \langle
-    \lambda, v\rangle\)</span>. Thus <span class="math inline">\(v
-    \mapsto \operatorname{ev}_v\)</span> goes from <span
-    class="math inline">\(V\)</span> to the double dual <span
-    class="math inline">\((V^\vee)^\vee\)</span>. And it is a linear
-    bijection for finite dimesional vector spaces.</p>
+    class="math inline">\(V^\vee\)</span> as vector spaces using a
+    linear map <span class="math inline">\(A :  V \to V^\vee\)</span> is
+    equivalent to the musical isomorphism with respect to a choice of
+    metric whose Gram matrix is <span class="math inline">\(A\)</span>
+    (unless you do not choose the bases that were the obvious choice).
+    This all depends on a choice of inner product, and not canonical<a
+    href="#fn4" class="footnote-ref" id="fnref4"
+    role="doc-noteref"><sup>4</sup></a>.</p>
     <h1 class="unnumbered" id="gradients...-finally">Gradients...
     Finally!</h1>
     <p>So a loss function <span class="math inline">\(\ell\)</span> is a
@@ -678,6 +678,29 @@
     all the life out of mathematical writing, one would just call all of
     them <em>functions</em>.<a href="#fnref2" class="footnote-back"
     role="doc-backlink">↩︎</a></p></li>
+    <li id="fn3"><p>But only for the continuous dual. In finite
+    dimensions linear is continuous.<a href="#fnref3"
+    class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+    <li id="fn4"><p>On the other hand we have a canonical matching <span
+    class="math inline">\((V^\vee)^\vee \cong V\)</span>, without any
+    choice of metric. <span class="math inline">\((V^\vee)^\vee\)</span>
+    is called the <span><strong>double dual</strong></span>. One simply
+    associates a vector <span class="math inline">\(v \in V\)</span> to
+    the linear functional <span
+    class="math inline">\(\operatorname{ev}_v: V^\vee \to
+    \mathbb{R}\)</span> eating linear functionals on <span
+    class="math inline">\(V\)</span>. The value of <span
+    class="math inline">\(\operatorname{ev}_v\)</span> on a linear
+    functional <span class="math inline">\(\lambda\)</span> is by
+    evaluation of <span class="math inline">\(\lambda\)</span> at <span
+    class="math inline">\(v\)</span>, in other words <span
+    class="math inline">\(\operatorname{ev}_v(\lambda) = \langle
+    \lambda, v\rangle\)</span>. Thus <span class="math inline">\(v
+    \mapsto \operatorname{ev}_v\)</span> goes from <span
+    class="math inline">\(V\)</span> to the double dual <span
+    class="math inline">\((V^\vee)^\vee\)</span>. And it is a linear
+    bijection for finite dimesional vector spaces.<a href="#fnref4"
+    class="footnote-back" role="doc-backlink">↩︎</a></p></li>
     </ol>
     </section>
   </main>

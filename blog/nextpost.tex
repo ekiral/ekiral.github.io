@@ -4,13 +4,16 @@
 
 \title{Learning Distributions on the Parameter Space}
 \author{emk}
+\date{2025/08/10}
 \begin{document}
 
 \maketitle
 
+Let's learn a probability distribution on the space of parameters, so that whenever we sample from this distribution we get good model parameters, and not the same one over and over again either. 
+
 We follow the notation of the \href{https://ekiral.github.io/blog/2025-06-05_notation.html}{setting} where we have a parametrized model $f$ with parameter space $\Theta$. With training data, we construct a loss function $\ell(\vec{\theta})$ and a loss contribution $\ell_i(\vec{\theta})$ for each labeled data point $(\vec{x}_i, y_i) \in \mathcal{X} \times \mathcal{Y}$. 
 
-Classically people minimize the loss function and find\footnote{or at least give it the old college try} a $\vec{\theta}^* \in \Theta$ which then they use to generalize the predictions $f(\cdot, \vec{\theta}^*) : \mathcal{X} \to \mathcal{Y}$. This is usually done via gradient methods, which requires that $\Theta$ be not only a manifold, but also have a Riemannian structure, i.e. have an inner product structure 
+Classically people minimize the loss function via gradient methods and find\footnote{or at least give it the old college try} a $\vec{\theta}^* \in \Theta$ which then they use to generalize the predictions $f(\cdot, \vec{\theta}^*) : \mathcal{X} \to \mathcal{Y}$. That gradients are used assumes a Riemannian structure, i.e. have an inner product structure in the tangent planes, but that's a talk for another day.
 
 
 \subsection*{The likelihood interpretation}
