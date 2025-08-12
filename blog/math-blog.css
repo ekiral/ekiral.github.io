@@ -294,7 +294,7 @@ strong {
 
 /* Links */
 a, a:visited {
-    color: inherit;
+    color: #a63446;
     text-decoration: none;
     background: linear-gradient(#fffff8, #fffff8), linear-gradient(#fffff8, #fffff8), linear-gradient(currentColor, currentColor);
     background-size: 0.05em 1px, 0.05em 1px, 1px 1px;
@@ -306,6 +306,10 @@ a, a:visited {
 a:link::selection, a:link::-moz-selection {
     text-shadow: 0.03em 0 #b4d5fe, -0.03em 0 #b4d5fe, 0 0.03em #b4d5fe, 0 -0.03em #b4d5fe, 0.06em 0 #b4d5fe, -0.06em 0 #b4d5fe, 0.09em 0 #b4d5fe, -0.09em 0 #b4d5fe, 0.12em 0 #b4d5fe, -0.12em 0 #b4d5fe, 0.15em 0 #b4d5fe, -0.15em 0 #b4d5fe;
     background: #b4d5fe;
+}
+
+a:hover {
+    color: #c5282f; 
 }
 
 /* Figures */

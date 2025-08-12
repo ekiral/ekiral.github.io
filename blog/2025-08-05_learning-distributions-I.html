@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="emk" />
+  <meta name="dcterms.date" content="2025/08/10" />
+  
+  
+  <title>Learning Distributions, Part I: The Objective</title>
+  
+
+  
+  <!-- CSS -->
+    <link rel="stylesheet" href="math-blog.css" />
+  
+  <!-- MathJax (only if --mathjax flag is used) -->
+    <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']],
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '0.8em'
+    }
+  };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+  <!-- Analytics or other header includes -->
+  </head>
+
+<body>
+  <!-- Title -->
+    <header class="title-header">
+    <h1 class="title">Learning Distributions, Part I: The Objective</h1>
+  </header>
+  
+  <!-- Navigation -->
+  <nav class="post-nav">
+    <a href="../index.html">← Back to Homepage</a>
+        | <a href="blog-index.html">← Back to Blog Index</a>
+      </nav>
+
+  <!-- Main content -->
+  <main>
+    <p>Learn a probability distribution on the space of parameters so
+    that whenever you sample from this distribution you get good models,
+    and also not the same one over and over. That’s the goal.</p>
+    <p>We follow the notation of the <a
+    href="https://ekiral.github.io/blog/2025-06-05_notation.html">setting</a>
+    with parametrized model <span class="math inline">\(f\)</span>,
+    parameter space <span class="math inline">\(\Theta\)</span>, loss
+    function <span class="math inline">\(\ell:\Theta \to
+    \mathbb{R}\)</span>, loss contributions <span
+    class="math inline">\(\ell_i: \Theta \to \mathbb{R}\)</span> for
+    each labeled data point <span
+    class="math inline">\((\mathbf{\boldsymbol{x}}_i, y_i) \in
+    \mathcal{X} \times \mathcal{Y}\)</span>, and maybe even a
+    regularizer <span class="math inline">\(R: \Theta \to
+    \mathbb{R}\)</span>.</p>
+    <p>Classically you minimize the loss function via gradient methods
+    and find<a href="#fn1" class="footnote-ref" id="fnref1"
+    role="doc-noteref"><sup>1</sup></a> a <span
+    class="math inline">\(\mathbf{\boldsymbol{\theta}}^* \in
+    \Theta\)</span> which then generates predictions via <span
+    class="math inline">\(f(\cdot, \mathbf{\boldsymbol{\theta}}^*) :
+    \mathcal{X} \to \mathcal{Y}\)</span>.</p>
+    <p>Instead, we now search for distributions, not a single <span
+    class="math inline">\(\mathbf{\boldsymbol{\theta}}^*\)</span>. To
+    that end, specify a base measure <span
+    class="math inline">\(\nu\)</span> on the manifold <span
+    class="math inline">\(\Theta\)</span>, and our search space (at
+    least initially) is the convex space of probability distributions of
+    the form <span class="math display">\[\mathcal{P}_\nu(\Theta) =
+    \bigg\{q\,\mathrm{d}\nu : q \in L^1(\Theta, \,\mathrm{d}\nu), q \geq
+    0, \int_\Theta q\,\mathrm{d}\nu = 1\bigg\}.\]</span> Later, we will
+    restrict this further. The objective function is a function over the
+    density function <span class="math display">\[\mathcal{E}(q) =
+    \mathbb{E}_{q\,\mathrm{d}\nu}[\ell] - \mathcal{H}_\nu(q)\]</span>
+    where <span class="math inline">\(\mathcal{H}_\nu(q)\)</span> is the
+    entropy<a href="#fn2" class="footnote-ref" id="fnref2"
+    role="doc-noteref"><sup>2</sup></a>. The function <span
+    class="math inline">\(q\)</span> is called a density function, and
+    we will go ahead and identify <span class="math inline">\(q\)</span>
+    with <span class="math inline">\(q\,\mathrm{d}\nu\)</span> freely as
+    long as there is no risk of confusion. Also <span
+    class="math inline">\(\int_\Theta f \,\mathrm{d}\nu\)</span> is a
+    common shorthand way of writing <span
+    class="math inline">\(\int_{\Theta} f(\mathbf{\boldsymbol{\theta}})
+    \,\mathrm{d}\nu(\mathbf{\boldsymbol{\theta}})\)</span>.</p>
+    <p>The two terms in the objective <span
+    class="math inline">\(\mathcal{E}(q)\)</span> are antagonistic to
+    one another. In fact we may see this objective as an implementation
+    of the exploration exploitation trade-off in the parameter
+    space.</p>
+    <ul>
+    <li><p>Maximizing the entropy term <span
+    class="math display">\[\mathcal{H}_\nu(q) = -\int_{\Theta} q \log q
+    \,\mathrm{d}\nu\]</span> we get distributions that prefer a wider
+    spread, thus exploring the parameter space.</p></li>
+    <li><p>Minimizing the expectation term <span
+    class="math display">\[\mathbb{E}_{q}[\ell] = \int_{\Theta}
+    \ell(\mathbf{\boldsymbol{\theta}}) q(\mathbf{\boldsymbol{\theta}})
+    \,\mathrm{d}\nu(\mathbf{\boldsymbol{\theta}})\]</span> is achieved
+    at distributions whose mass is concentrated in low-loss regions of
+    the landscape, exploiting a region once the search method finds
+    one.</p></li>
+    </ul>
+    <p>And the objective balances these two incentives. It is also
+    possible to include a temperature term <span
+    class="math inline">\(\tau&gt;0\)</span> to adjust how to balance
+    these two. More on that later.</p>
+    <h2 class="unnumbered" id="kullback-leibler-divergence.">Kullback
+    Leibler divergence.</h2>
+    <p>We can rewrite our objective using Kullback Leibler (KL)
+    divergence from <span class="math inline">\(p\)</span> to <span
+    class="math inline">\(q\)</span>, where <span
+    class="math display">\[p(\mathbf{\boldsymbol{\theta}}) = \frac{1}{Z}
+    e^{-\ell(\mathbf{\boldsymbol{\theta}})}\]</span> where <span
+    class="math inline">\(Z = \int_{\Theta}
+    e^{-\ell(\mathbf{\boldsymbol{\theta}})}
+    \,\mathrm{d}\nu(\mathbf{\boldsymbol{\theta}})\)</span> is the
+    normalizing factor, also called partition function. The <span
+    class="math inline">\(p\)</span> is called the Gibbs-Boltzmann
+    distribution, due to a thermodynamics interpretation which we will
+    touch upon later. A quick calculation gives <span
+    class="math display">\[\begin{aligned}
+        \mathcal{E}(q) &amp;= \mathbb{E}_{q}[\ell] - \mathcal{H}_\nu(q)
+    \\
+        &amp;= \int_{\Theta} q \ell  + q \log q \,\mathrm{d}\nu \\
+        &amp;= \int_{\Theta} q( \log q - \log e^{-\ell}) \,\mathrm{d}\nu
+    \\
+        &amp; = \int_{\Theta} q( \log q - \log \left(\frac{1}{Z}
+    e^{-\ell}\right) \,\mathrm{d}\nu - \int_{\Theta} q \log
+    Z\,\mathrm{d}\nu \\
+        &amp;= \int_{\Theta} q \log \frac{q}{p} \,\mathrm{d}\nu - \log Z
+    \\
+        &amp;= D(q\| p) - \log Z
+    \end{aligned}\]</span></p>
+    <p>So we have that <span class="math inline">\(\mathcal{E}\)</span>
+    is equal to the KL-divergence <span
+    class="math inline">\(D(q\|p)\)</span>, up to a constant. In terms
+    of optimization, that constant offset will not play a role. But I
+    must mention that constant too is very interesting, it is the
+    Helmholtz free energy.</p>
+    <div class="exercise">
+    <p><strong>Exercise 1</strong>. <em>The Helmholtz free energy of a
+    system is defined, in general, with the temperature term not
+    necessarily set to <span class="math inline">\(\tau = 1\)</span>. So
+    redo the above calculation with <span
+    class="math inline">\(\mathcal{E}(q) = \mathbb{E}_q[\ell] -
+    \tau\mathcal{H}_\nu(q)\)</span> and obtain <span
+    class="math inline">\(\mathcal{E}(q) = \tau D(q\|p_\tau) -\tau \log
+    Z(\beta)\)</span> where <span class="math inline">\(\beta =
+    1/\tau\)</span>, <span class="math inline">\(p_\tau \propto
+    e^{-\beta \ell}\)</span> and <span
+    class="math inline">\(Z(\beta)\)</span> is its normalizing constant.
+    The Helmholtz free energy is <span class="math inline">\(- \tau \log
+    Z(\beta)\)</span>.</em></p>
+    </div>
+    <p>So we minimize the KL-divergence <span
+    class="math inline">\(\mathop{\mathrm{\arg\,\min\,\,}}_{q}
+    D(q\|p)\)</span>, and this holds even if we are not minimizing over
+    all of <span class="math inline">\(\mathcal{P}_\nu(\Theta)\)</span>.
+    But let’s a few observations:</p>
+    <ul>
+    <li><p>Even though <span class="math inline">\(\ell\)</span> may
+    create a highly intricate and nonconvex loss landscape, <span
+    class="math inline">\(\mathbb{E}_q[\ell]\)</span> is a linear
+    function on the in the convex space <span
+    class="math inline">\(\mathcal{P}_\nu(\Theta)\)</span>. (The space
+    <span class="math inline">\(\Theta\)</span> doesn’t even need to be
+    convex for this)</p></li>
+    <li><p>Negative entropy is (strictly) convex in <span
+    class="math inline">\(q\)</span>, thus <span
+    class="math inline">\(\mathcal{E}(q)\)</span> is a convex
+    functional.</p></li>
+    <li><p>Meaning, there is a unique global minimum. In fact since the
+    <span class="math inline">\(KL\)</span>-divergence <span
+    class="math inline">\(D(q\|p) \geq 0\)</span> with zero only when
+    <span class="math inline">\(q = p\)</span>, the minimum occurs when
+    <span class="math inline">\(q\)</span> is the Gibbs-Boltzmann
+    distribution.</p></li>
+    <li><p>So we solved our problem…wait, what!</p></li>
+    </ul>
+    <figure>
+    <img src="./figures/loss_and_posterior.svg" style="width:70.0%" />
+    <figcaption>The Gibbs-Boltzmann distribution (which is the global
+    solution to the optimization problem if we had no constraints in our
+    search space) makes intuitive sense. If the loss is low, the density
+    of <span class="math inline">\(p\)</span> is higher there, and vice
+    versa. Furthermore there is more mass under a wide basin, than a
+    sharp minima, so one is more likely to sample from wider
+    minima.</figcaption>
+    </figure>
+    <p>Obviously there’s a catch, right? If minimizing <span
+    class="math inline">\(\ell\)</span> stumped me because it was highly
+    non-convex, can I exclaim <em>eureka</em> by merely considering the
+    problem over distributions? Indeed, we do linearize the problem—and
+    convexify it by adding the negative entropy term—but this is at the
+    cost of going infinite dimensional. And indeed there’s a catch:
+    Sampling from <span class="math inline">\(p\propto
+    e^{-\ell}\)</span> is not simpler than minimizing <span
+    class="math inline">\(\ell\)</span>. One method for such sampling is
+    a Langevin process (<a
+    href="https://en.wikipedia.org/wiki/Metropolis-adjusted_Langevin_algorithm">MALA</a>)
+    and it is a noise injected version of gradient descent on <span
+    class="math inline">\(\ell\)</span> with some additional correction
+    steps so that the limiting distribution ends up being the
+    Gibbs-Boltzmann measure <span class="math inline">\(p\)</span>. At
+    any rate, this sampling process is at least as hard as gradient
+    descent, which is what we were going to use for the minimization
+    anyhow.</p>
+    <p>We can still work with the distributional setup if we do not work
+    with the space of all density functions, but restrict ourselves to a
+    tractable family of candidate posteriors <span
+    class="math inline">\(\mathcal{Q} \subseteq
+    \mathcal{P}_\nu(\Theta)\)</span>. For example, let <span
+    class="math inline">\(\mathcal{Q}\)</span> be a finite dimensional
+    manifold<a href="#fn3" class="footnote-ref" id="fnref3"
+    role="doc-noteref"><sup>3</sup></a> so that we can do gradient
+    descent on <span class="math inline">\(\mathcal{Q}\)</span>. Now by
+    keeping track of only a few parameters (as opposed to infinite), we
+    can move on the manifold.</p>
+    <figure>
+    <img src="./figures/closestq.svg" style="width:70.0%" />
+    <figcaption>We choose a family <span
+    class="math inline">\(\mathcal{Q}\)</span> of candidate posteriors,
+    i.e. bunch of distributions we decided we were going to search in.
+    Then the minimization <span
+    class="math inline">\(\mathop{\mathrm{\arg\,\min\,\,}}_{q \in
+    \mathcal{Q}} \mathcal{E}(q)\)</span> tries to find a point on <span
+    class="math inline">\(\mathcal{Q}\)</span> for which the
+    reverse-<span class="math inline">\(KL\)</span> divergence <span
+    class="math inline">\(D(q\|p)\)</span> is minimal.</figcaption>
+    </figure>
+    <h3 class="unnumbered" id="reverse-vs-forward-kl">Reverse vs Forward
+    KL</h3>
+    <p>We minimize <span class="math inline">\(D(q\|p)\)</span>, and yes
+    this came from a rather intuitive balancing objective between the
+    expected loss and entropy. But still, we can ask why not <span
+    class="math inline">\(D(p\|q)\)</span>. Or more precisely what would
+    either mean at an intuitive level. This is explained rather well in
+    <a
+    href="https://www.tuananhle.co.uk/notes/reverse-forward-kl.html">this
+    blog post by Tan Anh Le</a>. In one sentence, the reverse KL (ours)
+    makes sure <span class="math inline">\(q\)</span> settles itself in
+    one mode of the possibly multimodal <span
+    class="math inline">\(p\)</span>; whereas the forward KL encourages
+    <span class="math inline">\(q\)</span> to cover all of the support
+    of <span class="math inline">\(p\)</span>. In the latter, sampling
+    form <span class="math inline">\(q\)</span> doesn’t guarantee that
+    you will be in a likely place for <span
+    class="math inline">\(p\)</span>, meaning you may well be in a high
+    loss region. This is no good. I’d rather cover less of the “good”
+    parameters in <span class="math inline">\(\Theta\)</span> than get a
+    “bad” parameter.</p>
+    <h2 class="unnumbered" id="the-bayesian-interpretation">The Bayesian
+    Interpretation</h2>
+    <p>There is an interpretation of <span
+    class="math inline">\(\ell_i(\mathbf{\boldsymbol{\theta}})\)</span>
+    as the negative log likelihood of observing the label <span
+    class="math inline">\(y\)</span> <em>given</em> the input <span
+    class="math inline">\(\mathbf{\boldsymbol{x}}\)</span> and the
+    parameter <span
+    class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span>. This
+    interpretation can make sense when the loss between <span
+    class="math inline">\(f(\mathbf{\boldsymbol{x}},
+    \mathbf{\boldsymbol{\theta}})\)</span> and the true label <span
+    class="math inline">\(y\)</span> is supposed to be a model of how
+    the label data gets generated. But regardless of whether it is
+    reasonable or not we can still see the consequences of such an
+    interpretation. So our assumption is <span
+    class="math display">\[\ell_i(\mathbf{\boldsymbol{\theta}}) = -\log
+    \mathop{\mathrm{Prob}}(y_i | \mathbf{\boldsymbol{x}}_i,
+    \mathbf{\boldsymbol{\theta}}),\]</span> which is equivalent to <span
+    class="math display">\[\ell_i(\mathbf{\boldsymbol{\theta}}) = - \log
+    \mathop{\mathrm{Prob}}(\mathbf{\boldsymbol{x}}_i, y_i |
+    \mathbf{\boldsymbol{\theta}}) + \log
+    \mathop{\mathrm{Prob}}(\mathbf{\boldsymbol{x}})\]</span> with <span
+    class="math inline">\(\mathop{\mathrm{Prob}}(\mathbf{\boldsymbol{x}})\)</span>
+    being the probability of observing <span
+    class="math inline">\(\mathbf{\boldsymbol{x}}\)</span> in general,
+    whatever that means. Note that it is independent of <span
+    class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span>, even if
+    we were to assume that our classification model somehow pertains to
+    something real about the data distribution.</p>
+    <p>The Bayesian rule comes with a story. Initially we are ignorant
+    about what <span
+    class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span> should
+    be, we think it is <span
+    class="math inline">\(\mathop{\mathrm{Prob}}(\mathbf{\boldsymbol{\theta}})\)</span>.
+    This is our prior belief. We then observe some data <span
+    class="math inline">\((\mathbf{\boldsymbol{x}}_i, y_i)\)</span> and
+    we are wiser for it. Now <em>given that</em> we observed <span
+    class="math inline">\((\mathbf{\boldsymbol{x}}_i, y_i)\)</span> our
+    new posterior belief is given by <span
+    class="math display">\[\mathop{\mathrm{Prob}}(\mathbf{\boldsymbol{\theta}}
+    | \mathbf{\boldsymbol{x}}_i, y_i) =
+    \frac{\mathop{\mathrm{Prob}}(\mathbf{\boldsymbol{x}}_i, y_i|
+    \mathbf{\boldsymbol{\theta}})
+    \mathop{\mathrm{Prob}}(\mathbf{\boldsymbol{\theta}})}{\mathop{\mathrm{Prob}}(\mathbf{\boldsymbol{x}}_i,
+    y_i)}.\]</span> In our next step, when we encounter a new data
+    point, the left hand side is going to be our new prior. Buf in the
+    beginning we are free to choose whatever prior we have, for example
+    a Gaussian <span
+    class="math inline">\(\mathop{\mathrm{Prob}}(\mathbf{\boldsymbol{\theta}})
+    \propto e^{-\lambda\|\theta\|^2}\)</span>. Taking negative
+    logarithms of both sides we get <span class="math display">\[-\log
+    \mathop{\mathrm{Prob}}(\mathbf{\boldsymbol{\theta}} |
+    \mathbf{\boldsymbol{x}}_i, y_i) =
+    \ell_i(\mathbf{\boldsymbol{\theta}}) +
+    R(\mathbf{\boldsymbol{\theta}}) + \text{const}.\]</span> where <span
+    class="math inline">\(R(\mathbf{\boldsymbol{\theta}})=
+    \lambda\|\mathbf{\boldsymbol{\theta}}\|^2\)</span> ended up being
+    the <span class="math inline">\(L^2\)</span>-regularizer.</p>
+    <p>Minimizing <span class="math inline">\(\sum_{i = 1}^N \ell_i
+    (\mathbf{\boldsymbol{\theta}}) +
+    R(\mathbf{\boldsymbol{\theta}})\)</span>, corresponds to maximizing
+    the density of the posterior distribution after having seen all the
+    data points. This is Maximum a Posteriori—a.k.a. MAP—estimation.</p>
+    <p>On the other hand forming the Gibbs-Boltzmann distribution <span
+    class="math inline">\(p(\mathbf{\boldsymbol{\theta}})\)</span> is
+    keeping exact track of the distribution <span
+    class="math inline">\(\mathop{\mathrm{Prob}}(\mathbf{\boldsymbol{\theta}}
+    | \{(\mathbf{\boldsymbol{x}}_1, y_1), \ldots,
+    (\mathbf{\boldsymbol{x}}_N, y_N)\})\)</span>. This is the connection
+    why one sneaks in the word Bayesian in these discussions. The
+    <em>Bayesian</em> learning, the <em>Bayesian</em> posterior etc.
+    We’re just keeping track of the full posterior that came from Bayes’
+    rule is all.</p>
+    <h3 class="unnumbered"
+    id="where-the-variational-problem-is-not-bayesian">Where the
+    variational problem is not Bayesian</h3>
+    <p>The first obvious difference between optimization of <span
+    class="math inline">\(\mathcal{E}(q)\)</span> vs. the Bayes story
+    told above, is in restricting to a family <span
+    class="math inline">\(\mathcal{Q}\)</span>. This robs us of the
+    multiplicative structure of the Gibbs-Boltzmann distribution (the
+    exponential!) that was shared by the Bayes’ Rule. If our candidate
+    posteriors <span class="math inline">\(\mathcal{Q}\)</span> are an
+    Exponential Family (EF) of distributions, then actually we can see
+    some shadow of this multiplicative structure, echoing Bayes’ rule.
+    So some things are lost for the sake of tractability, but some of
+    that Bayes feeling can still be salvaged. But the details of that
+    are for another blog-post.</p>
+    <p>The second issue, which I think is a non-issue, is the
+    introduction of a temperature parameter. If we believe that <span
+    class="math inline">\(\ell_i\)</span> is truly and literally the
+    negative log likelihood of observing <span
+    class="math inline">\(y_i\)</span> given <span
+    class="math inline">\(\mathbf{\boldsymbol{x}}_i\)</span>, then sure,
+    <span class="math inline">\(\tau = 1\)</span> is your only
+    principled option. But in all honesty, was the model ever designed
+    to give you true log likelihoods? And who says <span
+    class="math inline">\(\frac{1}{\tau} \ell_i\)</span> isn’t and
+    cannot be interpreted as the negative log-likelihood?</p>
+    <p>The third point is in some sense related to the second one,
+    because in machine learning the standard objective function is the
+    the empirical loss <span
+    class="math display">\[\ell(\mathbf{\boldsymbol{\theta}}) =
+    \frac{1}{N} \sum_{i = 1}^N \ell_i(\mathbf{\boldsymbol{\theta}}) +
+    R(\mathbf{\boldsymbol{\theta}})\]</span> which has the <span
+    class="math inline">\(1/N\)</span> term in front of the loss
+    contributions. Even though I just said having a <span
+    class="math inline">\(1/\tau\)</span> was OK, having a <span
+    class="math inline">\(1/N\)</span> is not OK, and I’m not being
+    hypocritical. One thing is that <span
+    class="math inline">\(\tau\)</span> is a constant, but here we need
+    to keep reinterpreting the meaning of the loss contributions as the
+    number of data points grow... really? Perhaps. But the
+    incompatibility is clearest in the philosophies of Bayes vs ML
+    optimization in regards to the prior/regularizer. In Bayes, the
+    prior distribution is something you make up, and its effect is
+    supposed to be washed away with the stream of data that comes in.
+    Whereas in ML, the size of the regularizer is fixed with respect to
+    the data size and should be that way, since its role is to constrain
+    the search space of parameters. It should never be washed away
+    regardless of the avalanche of data that comes in.</p>
+    <p>This third point I think shows an incongruity between the ML
+    empirical loss and its Bayesian interpretation if there is a
+    regularizer. Many ML systems are trained without an explicit
+    regularizer, in which case we might take the first data point as
+    constituting the prior, and then indeed their information needs to
+    get washed away with incoming data. So there’s that. Personally I’m
+    happy with the role of the regularizer as essentially restricting
+    the search space, and not try and fit the circular peg of priors
+    into the square hole of regularizers.</p>
+    <h2 class="unnumbered"
+    id="thermodynamics-interpretation">Thermodynamics
+    Interpretation</h2>
+    <p>The problem of minimizing <span
+    class="math inline">\(\mathcal{E}(q)\)</span> (equivalently,
+    minimizing <span class="math inline">\(D(q\|p)\)</span> can be
+    formulated as the following constrained optimization problem. The
+    maximum entropy distribution, <em>given that</em> the expected loss
+    is below/at a certain level.</p>
+    <p>This is very much the fundamental idea behind statistical
+    mechanics/thermodynamics is: Given a system with a high number of
+    possible states—called microstates—which we cannot be enumerated in
+    any meaningful way, we analyze the system using some aggregate
+    quantities—called macrostates—by assuming that the microstates are
+    distributed according to the maximum entropy under the constraint
+    given by the macrostate.</p>
+    <p>For example if Morpheus were to simulate all the particles of air
+    that Neo breathes the system would have to record the position and
+    velocity of each air molecule. Theoretically we can calculate the
+    energy of each particle (potential plus kinetic) but I wouldn’t
+    delegate the task of such a calculation, not even to a demon.
+    Instead given that the average energy of an air molecule in the room
+    is <span class="math inline">\(E_0\)</span>, statistical mechanics
+    assume that at equilibrium the distribution of the states of
+    particles are at maximum entropy given this average energy
+    constraint (yes the verb assume is indeed plural<a href="#fn4"
+    class="footnote-ref" id="fnref4"
+    role="doc-noteref"><sup>4</sup></a>). The resulting set of air
+    molecules have states distributed according to the Gibbs-Boltzmann
+    distribution.</p>
+    <p>In our case, the analogy is a room full of neural networks<a
+    href="#fn5" class="footnote-ref" id="fnref5"
+    role="doc-noteref"><sup>5</sup></a> with <span
+    class="math inline">\(\mathbf{\boldsymbol{\theta}}\)</span> denoting
+    their position coordinates. Each of these NN particles have an
+    energy measured by <span
+    class="math inline">\(\ell(\mathbf{\boldsymbol{\theta}})\)</span>,
+    which is akin to potential energy. We ask <span
+    class="math display">\[\begin{aligned}
+        \mathop{\mathrm{\arg\,\min\,\,}}_{q \in \mathcal{P}_\nu(\Theta)}
+    &amp;-\mathcal{H}_{\nu}(q)\\
+    \text{ such that } &amp; \mathbb{E}_{q} [\ell] \leq E_0.
+    \end{aligned}\]</span> This is a constrained optimization problem,
+    so form the Lagrangian <span class="math display">\[\mathcal{L}(q,
+    \beta) := \int_\Theta q\log q \,\mathrm{d}\nu + \beta (
+    \mathbb{E}_{q}[\ell]  - E_0).\]</span> Now maximizing on <span
+    class="math inline">\(\beta \geq 0\)</span> will give <span
+    class="math inline">\(+\infty\)</span> in every case <span
+    class="math inline">\(\mathbb{E}_q[\ell] &gt; E_0\)</span>. The only
+    way it would be satisfied at <span class="math inline">\(\beta =
+    0\)</span> is if the inequality was satisfied. Thus the constrained
+    optimization is equivalent to <span class="math display">\[\min_{q
+    \in \mathcal{P}_\nu(\Theta)} \max_{\beta \geq 0} \mathcal{L}(q,
+    \beta).\]</span> Given that the problem is convex, and Slater’s
+    condition is satisfied, this Lagrangian satisfies strong duality. So
+    we solve for the dual problem <span
+    class="math display">\[\max_{\beta &gt; 0} \min_{q \in
+    \mathcal{P}_\nu(\Theta)} \mathcal{L}(q, \beta),\]</span> and the
+    inner minimization is exactly (save for the constant <span
+    class="math inline">\(-\beta E_0\)</span>) the optimization problem
+    we started with with temperature <span class="math inline">\(\tau=
+    1/\beta\)</span>. Thus it has a unique solution at the
+    Gibbs-Boltzmann distribution <span class="math inline">\(q_\beta =
+    \frac{e^{-\beta \ell}}{Z(\beta)}\)</span>. Plugging that in, we get
+    (do it) <span class="math display">\[\min_{\beta \geq 0}
+    \mathcal{L}(q_\beta, \beta) = - \log Z(\beta) - \beta E_0.\]</span>
+    Noting that <span
+    class="math display">\[\frac{\,\mathrm{d}Z(\beta)}{\,\mathrm{d}\beta}
+    = - \mathbb{E}_{q_\beta}[\ell],\]</span> which is a fun calculation
+    you should try, the optimality condition <span
+    class="math inline">\(\frac{\,\mathrm{d}\mathcal{L}(q_\beta,
+    \beta)}{\,\mathrm{d}\beta} = 0\)</span> is <span
+    class="math display">\[\mathbb{E}_{q_\beta}[\ell] = E_0.\]</span> In
+    other words, the distribution which maximizes entropy under the
+    constraint of average loss being less than <span
+    class="math inline">\(E_0\)</span> is of the form <span
+    class="math inline">\(q_\beta\)</span>, i.e. a Gibbs-Boltzmann
+    distribution. And the highest entropy among those distributions is
+    achieved when the <span class="math inline">\(\beta\)</span>
+    parameter is low enough (i.e. the temperature <span
+    class="math inline">\(\tau\)</span> is high enough) so that the
+    expected loss is <span class="math inline">\(E_0\)</span><a
+    href="#fn6" class="footnote-ref" id="fnref6"
+    role="doc-noteref"><sup>6</sup></a>.</p>
+    <p>To wrap it up, there is a tight analogy with thermodynamics. The
+    exact same calculations one does to get the ideal gas law, gives us
+    the Bayes posterior distribution. The variable <span
+    class="math inline">\(\tau = 1/\beta\)</span> <em>is</em> literally
+    the temperature one defines in thermodynamics. We can take this
+    analogy further, defining analogues of volume, pressure etc. But
+    that is for another blog-post.</p>
+    <div class="remark">
+    <p><strong>Remark 1</strong>. <em>The classical optimization uses
+    gradients, and that means we assume a Riemannian structure on <span
+    class="math inline">\(\Theta\)</span>, i.e. have an inner product
+    structure in the tangent planes, <a
+    href="https://ekiral.github.io/blog/2025-08-01_what-is-gradient.html">discussed
+    here</a>.</em></p>
+    </div>
+    <div class="remark">
+    <p><strong>Remark 2</strong>. <em>The set of distributions <span
+    class="math inline">\(\mathcal{P}_\nu(\Theta)\)</span> can be
+    characterized in a less ad-hoc way by recalling the Radon-Nikodym
+    theorem which states that given two measures <span
+    class="math inline">\(\mu\)</span> and <span
+    class="math inline">\(\nu\)</span> with <span
+    class="math inline">\(\mu\)</span> absolutely continuous with
+    respect to <span class="math inline">\(\nu\)</span>—meaning that
+    null sets for <span class="math inline">\(\nu\)</span> are also null
+    sets for <span class="math inline">\(\mu\)</span> (i.e. <span
+    class="math inline">\(\nu(E) = 0 \implies \mu(E) = 0\)</span> for
+    all measurable <span class="math inline">\(E\)</span>) written as
+    <span class="math inline">\(\mu \ll \nu\)</span>—one has <span
+    class="math inline">\(\mu = f\,\mathrm{d}\nu\)</span> for a function
+    <span class="math inline">\(f\)</span> which is <span
+    class="math inline">\(\nu\)</span>-almost everywhere defined
+    uniquely. This function is called the Radon-Nikodym derivative of
+    <span class="math inline">\(\mu\)</span> with respect to <span
+    class="math inline">\(\nu\)</span> and it is denoted by <span
+    class="math inline">\(f=
+    \frac{\,\mathrm{d}\mu}{\,\mathrm{d}\nu}\)</span>.</em></p>
+    <p><em>The equality of measure means that <span
+    class="math display">\[\mu(E) = \int_{E} f \,\mathrm{d}\nu\]</span>
+    for all measurable sets <span
+    class="math inline">\(E\)</span>.</em></p>
+    <p><em>Technically, for this theorem to hold <span
+    class="math inline">\(\nu\)</span> needs to be a <span
+    class="math inline">\(\sigma\)</span>-finite measure, i.e. there
+    needs to be a countable collection of measurable sets <span
+    class="math inline">\(A_i\)</span> so that <span
+    class="math inline">\(\nu(A_i) &lt; \infty\)</span> and <span
+    class="math inline">\(\cup_{i} A_i = \Theta\)</span>. Also as for
+    the <span class="math inline">\(\sigma\)</span>-algebra we take the
+    Borel sigma algebra containing the opens sets of <span
+    class="math inline">\(\Theta\)</span>. The measurable space is thus
+    compatible with the manifold structure</em></p>
+    </div>
+    <section id="footnotes" class="footnotes footnotes-end-of-document"
+    role="doc-endnotes">
+    <hr />
+    <ol>
+    <li id="fn1"><p>or at least give it the old college try<a
+    href="#fnref1" class="footnote-back"
+    role="doc-backlink">↩︎</a></p></li>
+    <li id="fn2"><p>to be precise, the relative entropy of <span
+    class="math inline">\(q\,\mathrm{d}\nu\)</span> with respect to
+    <span class="math inline">\(\nu\)</span><a href="#fnref2"
+    class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+    <li id="fn3"><p>a statistical manifold, since every point is a
+    distribution and we can assume the information geometry on it.<a
+    href="#fnref3" class="footnote-back"
+    role="doc-backlink">↩︎</a></p></li>
+    <li id="fn4"><p><img src="./figures/statistical_mechanics.png"
+    style="width:70.0%" alt="image" /><br />
+    Statistical mechanics: An ensemble of tradesmen, who on average will
+    be able to fix your car, but otherwise are maximally entropic.
+    <span>(Image generated by Gemini)</span><a href="#fnref4"
+    class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+    <li id="fn5"><p>calling it a neural gas would be fitting, if it
+    wouldn’t bring the authorities here. Also the name seems to have
+    been taken by <a
+    href="https://en.wikipedia.org/wiki/Neural_gas">another concept in
+    machine learning.</a><a href="#fnref5" class="footnote-back"
+    role="doc-backlink">↩︎</a></p></li>
+    <li id="fn6"><p>Here I assumed monotonicity of the expected loss in
+    <span class="math inline">\(\beta\)</span> which is true if <span
+    class="math inline">\(\ell \geq 0\)</span>. If we assume an even
+    very mild growth of <span class="math inline">\(\ell\)</span>, it is
+    enough to ensure <span class="math inline">\(e^{-\beta
+    \ell}\)</span> is integrable and differentiable, then the expected
+    loss is monotonely decreasing in <span
+    class="math inline">\(\beta\)</span> (increasing in the temperature)
+    and there is a unique optimizer.<a href="#fnref6"
+    class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+    </ol>
+    </section>
+  </main>
+
+  <!-- Bottom navigation (optional) -->
+  <nav class="post-nav-bottom">
+        <a href="blog-index.html">← Back to Blog Index</a>
+      </nav>
+
+  <!-- Author and date at bottom -->
+    <footer class="post-footer">
+    <div class="author-date">
+      <p class="author">emk</p>
+      <p class="date">2025/08/10</p>
+    </div>
+  </footer>
+  
+
+</body>
+</html>

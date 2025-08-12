@@ -1,0 +1,199 @@
+\documentclass[12pt]{amsart}
+\input{./preamble}
+
+
+\title{Learning Distributions,  Part I: The Objective}
+\author{emk}
+\date{2025/08/10}
+\begin{document}
+
+\maketitle
+
+Learn a probability distribution on the space of parameters so that whenever you sample from this distribution you get good models, and also not the same one over and over. That's the goal.
+
+We follow the notation of the \href{https://ekiral.github.io/blog/2025-06-05_notation.html}{setting} with parametrized model $f$, parameter space $\Theta$, loss function $\ell:\Theta \to \R$, loss contributions $\ell_i: \Theta \to \R$ for each labeled data point $(\vec{x}_i, y_i) \in \mathcal{X} \times \mathcal{Y}$, and maybe even a regularizer $R: \Theta \to \R$. 
+
+Classically you minimize the loss function via gradient methods and find\footnote{or at least give it the old college try} a $\vec{\theta}^* \in \Theta$ which then generates predictions via $f(\cdot, \vec{\theta}^*) : \mathcal{X} \to \mathcal{Y}$.
+
+Instead, we now search for distributions, not a single $\vec{\theta}^*$. To that end, specify a base measure $\nu$ on the manifold $\Theta$, and our search space (at least initially) is the convex space of probability distributions of the form 
+\[
+	\mathcal{P}_\nu(\Theta) = \bigg\{q\d\nu : q \in L^1(\Theta, \d\nu), q \geq 0, \int_\Theta q\d\nu = 1\bigg\}.
+\]
+Later, we will restrict this further. The objective function is a function over the density function 
+\[
+	\mathcal{E}(q) = \E_{q\d\nu}[\ell] - \mathcal{H}_\nu(q)
+\]
+where $\mathcal{H}_\nu(q)$ is the entropy\footnote{to be precise, the relative entropy of $q\d\nu$ with respect to $\nu$}.
+The function $q$ is called a density function, and we will go ahead and identify $q$ with $q\d\nu$ freely as long as there is no risk of confusion. Also $\int_\Theta f \d\nu$ is a common shorthand way of writing $\int_{\Theta} f(\vec{\theta}) \d\nu(\vec{\theta})$.
+
+The two terms in the objective $\mathcal{E}(q)$ are antagonistic to one another. In fact we may see this objective as an implementation of the exploration exploitation trade-off in the parameter space.
+\begin{itemize} 
+\item Maximizing the entropy term 
+\[
+	\mathcal{H}_\nu(q) = -\int_{\Theta} q \log q \d\nu
+\]
+we get distributions that prefer a wider spread, thus exploring the parameter space.
+\item Minimizing the expectation term
+\[
+	\E_{q}[\ell] = \int_{\Theta} \ell(\vec{\theta}) q(\vec{\theta}) \d\nu(\vec{\theta})
+\]
+is achieved at distributions whose mass is concentrated in low-loss regions of the landscape, exploiting a region once the search method finds one.
+\end{itemize}
+And the objective balances these two incentives. It is also possible to include a temperature term $\tau>0$ to adjust how to balance these two. More on that later.
+
+\subsection*{Kullback Leibler divergence.}
+
+We can rewrite our objective using Kullback Leibler (KL) divergence from $p$ to $q$, where
+\[
+	p(\vec{\theta}) = \frac{1}{Z} e^{-\ell(\vec{\theta})}
+\] 
+where $Z = \int_{\Theta} e^{-\ell(\vec{\theta})} \d\nu(\vec{\theta})$ is the normalizing factor, also called partition function. The $p$ is called the Gibbs-Boltzmann distribution, due to a thermodynamics interpretation which we will touch  upon later. A quick calculation gives
+\begin{align*}
+	\mathcal{E}(q) &= \E_{q}[\ell] - \mathcal{H}_\nu(q) \\
+	&= \int_{\Theta} q \ell  + q \log q \d\nu \\
+	&= \int_{\Theta} q( \log q - \log e^{-\ell}) \d\nu \\
+	& = \int_{\Theta} q( \log q - \log \left(\frac{1}{Z} e^{-\ell}\right) \d\nu - \int_{\Theta} q \log Z\d\nu \\
+	&= \int_{\Theta} q \log \frac{q}{p} \d\nu - \log Z \\
+	&= D(q\| p) - \log Z 
+\end{align*}
+
+So we have that $\mathcal{E}$ is equal to the KL-divergence $D(q\|p)$, up to a constant. In terms of optimization, that constant offset will not play a role. But I must mention that constant too is very interesting, it is the Helmholtz free energy.
+\begin{exercise}
+The Helmholtz free energy of a system is defined, in general, with the temperature term not necessarily set to $\tau = 1$. So redo the above calculation with $\mathcal{E}(q) = \E_q[\ell] - \tau\mathcal{H}_\nu(q)$ and obtain $\mathcal{E}(q) = \tau D(q\|p_\tau) -\tau \log Z(\beta)$ where $\beta = 1/\tau$,  $p_\tau \propto e^{-\beta \ell}$ and $Z(\beta)$ is its normalizing constant. The Helmholtz free energy is $- \tau \log Z(\beta)$.
+\end{exercise}
+
+
+So we minimize the KL-divergence $\argmin_{q} D(q\|p)$, and this holds even if we are not minimizing over all of $\mathcal{P}_\nu(\Theta)$. But let's a few observations:
+\begin{itemize}
+	\item Even though $\ell$ may create a highly intricate and nonconvex loss landscape, $\E_q[\ell]$ is a linear function on the in the convex space $\mathcal{P}_\nu(\Theta)$. (The space $\Theta$ doesn't even need to be convex for this)
+	\item Negative entropy is (strictly) convex in $q$, thus $\mathcal{E}(q)$ is a convex functional.
+	\item Meaning, there is a unique global minimum. In fact since the $KL$-divergence $D(q\|p) \geq 0$ with zero only when $q = p$, the minimum occurs when $q$ is the Gibbs-Boltzmann distribution.
+	\item So we solved our problem\dots wait, what!
+\end{itemize}
+
+
+
+\begin{figure}
+\centering
+\includesvg[width = 0.7\textwidth]{./figures/loss_and_posterior.svg}
+\caption*{The Gibbs-Boltzmann distribution (which is the global solution to the optimization problem if we had no constraints in our search space) makes intuitive sense. If the loss is low, the density of $p$ is higher there, and vice versa. Furthermore there is more mass under a wide basin, than a sharp minima, so one is more likely to sample from wider minima.}
+\end{figure}
+
+Obviously there's a catch, right? If minimizing $\ell$ stumped me because it was highly non-convex, can I exclaim \emph{eureka} by merely considering the problem over distributions? Indeed, we do linearize the problem---and convexify it by adding the negative entropy term---but this is at the cost of going infinite dimensional. And indeed there's a catch: Sampling from $p\propto e^{-\ell}$ is not simpler than minimizing $\ell$. One method for such sampling is a Langevin process (\href{https://en.wikipedia.org/wiki/Metropolis-adjusted_Langevin_algorithm}{MALA}) and it is a noise injected version of gradient descent on $\ell$ with some additional correction steps so that the limiting distribution ends up being the Gibbs-Boltzmann measure $p$. At any rate, this sampling process is at least as hard as gradient descent, which is what we were going to use for the minimization anyhow.
+
+We can still work with the distributional setup if we do not work with the space of all density functions, but restrict ourselves to a tractable family of candidate posteriors $\mathcal{Q} \subseteq \mathcal{P}_\nu(\Theta)$. For example, let $\mathcal{Q}$ be a finite dimensional manifold\footnote{a statistical manifold, since every point is a distribution and we can assume the information geometry on it.} so that we can do gradient descent on $\mathcal{Q}$. Now by keeping track of only a few parameters (as opposed to infinite), we can move on the manifold. 
+
+\begin{figure}[ht!]
+\centering
+\includesvg[width=0.7\textwidth]{./figures/closestq.svg}
+\caption*{We choose a family $\mathcal{Q}$ of candidate posteriors, i.e. bunch of distributions we decided we were going to search in. Then the minimization $\argmin_{q \in \mathcal{Q}} \mathcal{E}(q)$ tries to find a point on $\mathcal{Q}$ for which the reverse-$KL$ divergence $D(q\|p)$ is minimal.}
+\end{figure}
+
+
+\subsubsection*{Reverse vs Forward KL}
+
+We minimize $D(q\|p)$, and yes this came from a rather intuitive balancing objective between the expected loss and entropy. But still, we can ask why not $D(p\|q)$. Or more precisely what would either mean at an intuitive level. This is explained rather well in
+\href{https://www.tuananhle.co.uk/notes/reverse-forward-kl.html}{this blog post by Tan Anh Le}. In one sentence, the reverse KL (ours) makes sure $q$ settles itself in one mode of the possibly multimodal $p$; whereas the forward KL encourages $q$ to cover all of the support of $p$. In the latter, sampling form $q$ doesn't guarantee that you will be in a likely place for $p$, meaning you may well be in a high loss region. This is no good. I'd rather cover less of the ``good'' parameters in $\Theta$ than get a ``bad'' parameter. 
+
+
+
+\subsection*{The Bayesian Interpretation}
+
+There is an interpretation of $\ell_i(\vec{\theta})$ as the negative log likelihood of observing  the label $y$ \emph{given} the input $\vec{x}$ and the parameter $\vec{\theta}$. This interpretation can make sense when the loss between $f(\vec{x}, \vec{\theta})$ and the true label $y$ is supposed to be a model of how the label data gets generated.  But regardless of whether it is reasonable or not we can still see the consequences of such an interpretation. So our assumption is 
+\[
+	\ell_i(\vec{\theta}) = -\log \Prob(y_i | \vec{x}_i, \vec{\theta}),
+\]
+which is equivalent to 
+\[	
+\ell_i(\vec{\theta}) = - \log \Prob(\vec{x}_i, y_i | \vec{\theta}) + \log \Prob(\vec{x})
+\]
+with $\Prob(\vec{x})$ being the probability of observing $\vec{x}$ in general, whatever that means. Note that it is independent of $\vec{\theta}$, even if we were to assume that our classification model somehow pertains to something real about the data distribution. 
+
+The Bayesian rule comes with a story. Initially we are ignorant about what $\vec{\theta}$ should be, we think it is $\Prob(\vec{\theta})$. This is our prior belief. We then observe some data $(\vec{x}_i, y_i)$ and we are wiser for it. Now \emph{given that} we observed $(\vec{x}_i, y_i)$ our new posterior belief is given by
+\[
+	\Prob(\vec{\theta} | \vec{x}_i, y_i) = \frac{\Prob(\vec{x}_i, y_i| \vec{\theta}) \Prob(\vec{\theta})}{\Prob(\vec{x}_i, y_i)}.
+\]
+In our next step, when we encounter a new data point, the left hand side is going to be our new prior. Buf in the beginning we are free to choose whatever prior we have, for example a Gaussian $\Prob(\vec{\theta}) \propto e^{-\lambda\|\theta\|^2}$. Taking negative logarithms of both sides we get
+\[
+	-\log \Prob(\vec{\theta} | \vec{x}_i, y_i) = \ell_i(\vec{\theta}) + R(\vec{\theta}) + \text{const}.
+\]
+where $R(\vec{\theta})= \lambda\|\vec{\theta}\|^2$ ended up being the $L^2$-regularizer.
+
+Minimizing $\sum_{i = 1}^N \ell_i (\vec{\theta}) + R(\vec{\theta})$, corresponds to maximizing the density of the posterior distribution after having seen all the data points. This is Maximum a Posteriori---a.k.a. MAP---estimation. 
+
+On the other hand forming the Gibbs-Boltzmann distribution $p(\vec{\theta})$ is keeping exact track of the distribution $\Prob(\vec{\theta} | \{(\vec{x}_1, y_1), \ldots, (\vec{x}_N, y_N)\})$. This is the connection why one sneaks in the word Bayesian in these discussions. The \emph{Bayesian} learning, the \emph{Bayesian} posterior etc. We're just keeping track of the full posterior that came from Bayes' rule is all.
+
+\subsubsection*{Where the variational problem is not Bayesian}
+
+The first obvious difference between optimization of $\mathcal{E}(q)$ vs.\ the Bayes story told above, is in restricting to a family $\mathcal{Q}$. This robs us of the multiplicative structure of the Gibbs-Boltzmann distribution (the exponential!) that was shared by the Bayes' Rule. If our candidate posteriors $\mathcal{Q}$ are an Exponential Family (EF) of distributions, then actually we can see some shadow of this multiplicative structure, echoing Bayes' rule. So some things are lost for the sake of tractability, but some of that Bayes feeling can still be salvaged. But the details of that are for another blog-post. 
+
+The second issue, which I think is a non-issue, is the introduction of a temperature parameter. If we believe that $\ell_i$ is truly and literally the negative log likelihood of observing $y_i$ given $\vec{x}_i$, then sure, $\tau = 1$ is your only principled option. But in all honesty, was the model ever designed to give you true log likelihoods? And who says $\frac{1}{\tau} \ell_i$ isn't and cannot be interpreted as the negative log-likelihood? 
+
+The third point is in some sense related to the second one, because in machine learning the standard objective function is the the empirical loss
+\[
+	\ell(\vec{\theta}) = \frac{1}{N} \sum_{i = 1}^N \ell_i(\vec{\theta}) + R(\vec{\theta})
+\] 
+which has the $1/N$ term in front of the loss contributions. Even though I just said having a $1/\tau$ was OK, having a $1/N$ is not OK, and I'm not being hypocritical. One thing is that $\tau$ is a constant, but here we need to keep reinterpreting the meaning of the loss contributions as the number of data points grow... really? Perhaps. But the incompatibility is clearest in the philosophies of Bayes vs ML optimization in regards to the prior/regularizer. In Bayes, the prior distribution is something you make up, and its effect is supposed to be washed away with the stream of data that comes in. Whereas in ML, the size of the regularizer is fixed with respect to the data size and should be that way, since its role is to constrain the search space of parameters. It should never be washed away regardless of the avalanche of data that comes in.
+
+This third point I think shows an incongruity between the ML empirical loss and its Bayesian interpretation if there is a regularizer. Many ML systems are trained without an explicit regularizer, in which case we might take the first data point as constituting the prior, and then indeed their information needs to get washed away with incoming data. So there's that. Personally I'm happy with the role of the regularizer as essentially restricting the search space, and not try and fit the circular peg of priors into the square hole of regularizers.
+
+\subsection*{Thermodynamics Interpretation}
+
+The problem of minimizing $\mathcal{E}(q)$ (equivalently, minimizing $D(q\|p)$ can be formulated as the following constrained optimization problem. The maximum entropy distribution, \emph{given that} the expected loss is below/at a certain level.
+
+This is very much the fundamental idea behind statistical mechanics/thermodynamics is: Given a system with a high number of possible states---called microstates---which we cannot be enumerated in any meaningful way, we analyze the system using some aggregate quantities---called macrostates---by assuming that the microstates are distributed according to the maximum entropy under the constraint given by the macrostate. 
+
+For example if Morpheus were to simulate all the particles of air that Neo breathes the system would have to record the position and velocity of each air molecule. Theoretically we can calculate the energy of each particle (potential plus kinetic) but I wouldn't delegate the task of such a calculation, not even to a demon. Instead given that the average energy of an air molecule in the room is $E_0$, statistical mechanics assume that at equilibrium the distribution of the states of particles are at maximum entropy given this average energy constraint (yes the verb assume is indeed plural\footnote{\includegraphics[width= 0.7\textwidth]{./figures/statistical_mechanics.png} \\Statistical mechanics: An ensemble of tradesmen, who on average will be able to fix your car, but otherwise are maximally entropic. \tiny{(Image generated by Gemini)}}). The resulting set of air molecules have states distributed according to the Gibbs-Boltzmann distribution. 
+
+In our case, the analogy is a room full of neural networks\footnote{calling it a neural gas would be fitting, if it wouldn't bring the authorities here. Also the name seems to have been taken by \href{https://en.wikipedia.org/wiki/Neural_gas}{another concept in machine learning.}} with $\vec{\theta}$ denoting their position coordinates. Each of these NN particles have an energy measured by $\ell(\vec{\theta})$, which is akin to potential energy. We ask
+\begin{align*}
+	\argmin_{q \in \mathcal{P}_\nu(\Theta)} &-\mathcal{H}_{\nu}(q)\\
+\text{ such that } & \E_{q} [\ell] \leq E_0.
+\end{align*}
+This is a constrained optimization problem, so form the Lagrangian 
+\[
+	\mathcal{L}(q, \beta) := \int_\Theta q\log q \d\nu + \beta ( \E_{q}[\ell]  - E_0).
+\]
+Now maximizing on $\beta \geq 0$ will give $+\infty$ in every case $\E_q[\ell] > E_0$.  The only way it would be satisfied at $\beta = 0$ is if the inequality was satisfied. Thus the constrained optimization is equivalent to
+\[
+	\min_{q \in \mathcal{P}_\nu(\Theta)} \max_{\beta \geq 0} \mathcal{L}(q, \beta).
+\]
+Given that the problem is convex, and Slater's condition is satisfied, this Lagrangian satisfies strong duality. So we solve for the dual problem 
+\[
+	\max_{\beta > 0} \min_{q \in \mathcal{P}_\nu(\Theta)} \mathcal{L}(q, \beta),
+\]
+and the inner minimization is exactly (save for the constant $-\beta E_0$) the optimization problem we started with with temperature $\tau= 1/\beta$. Thus it has a unique solution at the Gibbs-Boltzmann distribution $q_\beta = \frac{e^{-\beta \ell}}{Z(\beta)}$. Plugging that in, we get (do it)
+\[
+	\min_{\beta \geq 0} \mathcal{L}(q_\beta, \beta) = - \log Z(\beta) - \beta E_0.
+\]
+Noting that
+\[
+	\frac{\d Z(\beta)}{\d \beta} = - \E_{q_\beta}[\ell],
+\]
+which is a fun calculation you should try, the optimality condition $\frac{\d \mathcal{L}(q_\beta, \beta)}{\d \beta} = 0$ is 
+\[
+	\E_{q_\beta}[\ell] = E_0.
+\]
+In other words, the distribution which maximizes entropy under the constraint of average loss being less than $E_0$ is of the form $q_\beta$, i.e. a Gibbs-Boltzmann distribution. And the highest entropy among those distributions is achieved when the $\beta$ parameter is  low enough  (i.e. the temperature $\tau$ is high enough) so that the expected loss is $E_0$\footnote{Here I assumed monotonicity of the expected loss in $\beta$ which is true if $\ell \geq 0$. If we assume an even very mild growth of $\ell$, it is enough to ensure $e^{-\beta \ell}$ is integrable and differentiable, then the expected loss is monotonely decreasing in $\beta$ (increasing in the temperature) and there is a unique optimizer.}.
+
+To wrap it up, there is a tight analogy with thermodynamics. The exact same calculations one does to get the ideal gas law, gives us the Bayes posterior distribution. The variable $\tau = 1/\beta$ \emph{is} literally the temperature one defines in thermodynamics. We can take this analogy further, defining analogues of volume, pressure etc. But that is for another blog-post. 
+
+
+\begin{remark}
+The classical optimization uses gradients, and that means we assume a Riemannian structure on $\Theta$, i.e. have an inner product structure in the tangent planes,  \href{https://ekiral.github.io/blog/2025-08-01_what-is-gradient.html}{discussed here}.
+\end{remark}
+\begin{remark}
+The set of distributions $\mathcal{P}_\nu(\Theta)$ can be characterized in a less ad-hoc way by recalling the Radon-Nikodym theorem which states that given two measures $\mu$ and $\nu$ with $\mu$ absolutely continuous with respect to $\nu$---meaning that null sets for $\nu$ are also null sets for $\mu$ (i.e. $\nu(E) = 0 \implies \mu(E) = 0$ for all measurable $E$) written as $\mu \ll \nu$---one has $\mu = f\d\nu$ for a function $f$ which is $\nu$-almost everywhere defined uniquely. This function is called the Radon-Nikodym derivative of $\mu$ with respect to $\nu$ and it is denoted by $f= \frac{\d\mu}{\d\nu}$.
+
+The equality of measure means that
+\[
+	\mu(E) = \int_{E} f \d\nu
+\]
+for all measurable sets $E$.
+
+Technically, for this theorem to hold $\nu$ needs to be a $\sigma$-finite measure, i.e. there needs to be a countable collection of measurable sets $A_i$ so that $\nu(A_i) < \infty$ and $\cup_{i} A_i = \Theta$. Also as for the $\sigma$-algebra we take the Borel sigma algebra containing the opens sets of $\Theta$. The measurable space is thus compatible with the manifold structure
+\end{remark}
+
+
+
+\end{document}
